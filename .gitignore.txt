@@ -1,0 +1,16 @@
+# Django related
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Vue.js related
+node_modules/
+dist/
+npm-debug.log
+
+# General
+*.DS_Store
+*.env
