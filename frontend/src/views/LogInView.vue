@@ -3,9 +3,8 @@
 </template>
 
 <script>
-import axiosClient from './axiosClient';
 export default {
-  name: "signUp"
+  name: "LogInView"
 }
 </script>
 
