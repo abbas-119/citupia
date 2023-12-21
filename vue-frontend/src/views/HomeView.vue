@@ -3,8 +3,8 @@
     <div>
       <h1 class="text-xl font-semibold mb-10">Select from the following:</h1>
       <div class="flex flex-col space-y-2">
-        <button href="/monitoring/" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded mb-3">Monitoring</button>
-        <button href="/Planning/" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded">Planning</button>
+        <button @click="goToMonitoring" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded mb-3">Monitoring</button>
+        <button @click="goToPlanning" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded">Planning</button>
       </div>
     </div>
 
@@ -22,6 +22,15 @@ export default {
   },
   methods: {
 
+
+
+
+    goToMonitoring() {
+      this.$router.push('/monitoring/');
+    },
+    goToPlanning() {
+      this.$router.push('/planning/');
+    },
 
     user() {
       axiosClient.get("/v1/users/me").then((response) => {

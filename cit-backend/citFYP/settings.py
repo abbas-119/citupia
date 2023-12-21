@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+
+    'home_page.apps.HomePageConfig',
+
 ]
 
 MIDDLEWARE = [

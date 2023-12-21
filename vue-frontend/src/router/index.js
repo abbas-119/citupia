@@ -8,6 +8,7 @@ import ForgotPasswordView from "@/views/ForgotPasswordView.vue";
 import ResetPasswordView from "@/views/ResetPasswordView.vue";
 import ActivationView from "@/views/ActivationView";
 import SettingsView from "@/views/SettingsView";
+import Monitoring from "@/views/Monitoring.vue";
 
 const routes = [
   {
@@ -49,6 +50,11 @@ const routes = [
         path: '/settings/',
         name: 'settings',
         component: SettingsView
+    },
+    {
+        path: '/monitoring/',
+        name: 'monitoring',
+        component: Monitoring
     },
   {
     path: '/about',
