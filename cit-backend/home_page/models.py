@@ -8,6 +8,10 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
+    user_type = models.CharField(max_length=100, blank=True, null=True)
+    company = models.CharField(max_length=150, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    position = models.CharField(max_length=100, blank=True, null=True)
 
     def get_full_name(self):
         return f'{self.first_name} {self.last_name}'

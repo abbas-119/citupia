@@ -60,9 +60,9 @@ export default {
         } else {
           console.log("here")
           this.enable = true
-          if (!this.$store.state.isAuthenticated) {
+         /*if (!this.$store.state.isAuthenticated) {
             this.$router.push({name: 'LogIn', query: {redirect: this.$route.path}})
-          }
+          }*/
         }
       }
     }

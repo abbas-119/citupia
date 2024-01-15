@@ -1,5 +1,5 @@
 <template v-if="render" class="transition">
-    <div class="bg-pink-50 dark:bg-gray-900 h-full md:px-10 pb-20">
+    <div class="bg-orange-50 dark:bg-gray-900 h-full md:px-10 pb-20">
         <div class="min-h-screen">
             <div class="flex items-center mb-1 md:px-10 px-3 py-10">
                 <br><br>

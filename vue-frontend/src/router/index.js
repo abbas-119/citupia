@@ -12,6 +12,11 @@ import Monitoring from "@/views/Monitoring.vue";
 
 const routes = [
   {
+        path: '/sign-up',
+        name: 'SignUp',
+        component: SignUpView
+    },
+    {
     path: '/',
     name: 'home',
     component: HomeView
@@ -36,11 +41,7 @@ const routes = [
         name: 'ResetPassword',
         component: ResetPasswordView
     },
-    {
-        path: '/sign-up',
-        name: 'SignUp',
-        component: SignUpView
-    },
+
     {
         path: '/activate/:uid/:token',
         name: 'Activation',

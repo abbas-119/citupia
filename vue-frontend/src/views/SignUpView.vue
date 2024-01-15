@@ -152,22 +152,35 @@ export default {
   methods: {
     submitForm(e) {
       console.log(this.lastname)
+    // First POST request to create the user
       axiosClient.post('/v1/users/', {
         username: this.username,
         email: this.username,
+        first_name: this.firstname,
+        last_name: this.lastname,
+        user_type: this.user_type,
+        company: this.company,
+        city: this.city,
+        position: this.position,
         password: this.password,
         re_password: this.re_password,
-      })
+    })
           .then(response => {
-            
+            // Second POST request to save additional user information
             axiosClient.post(`/signup/`, {
               username: this.username,
               first_name: this.firstname,
               last_name: this.lastname,
+              user_type: this.user_type,
+              company: this.company,
+              city: this.city,
+              position: this.position,
             })
-            this.$router.push({name: 'LogIn', query: {redirect: this.$route.query.redirect}})
+
+            // Redirect to login page upon successful registration
+            this.$router.push({name: 'LogIn', query: {redirect: this.$route.query.redirect}});
           })
-          .catch(error => {
+      .catch(error => {
             console.log(error)
             if(Object.values(error.response.data)[0][0] == "A user with that username already exists."){
               this.errorMessage = "Email already in use."
@@ -177,9 +190,10 @@ export default {
               this.invalidPasswordBox= 'border-red-500 focus:ring-red-100'
             }
             this.invalid = true
-            
+
           })
-    }
   }
+}
+
 }
 </script>
