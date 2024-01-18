@@ -9,6 +9,7 @@ import ResetPasswordView from "@/views/ResetPasswordView.vue";
 import ActivationView from "@/views/ActivationView";
 import SettingsView from "@/views/SettingsView";
 import Monitoring from "@/views/Monitoring.vue";
+import Mon_maps from "@/views/Mon_maps.vue";
 
 const routes = [
   {
@@ -64,7 +65,12 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: AboutView
-  }
+  },
+    {
+     path: '/stk_maps',
+     name: 'stk_maps',
+     component: Mon_maps
+    }
 ]
 
 const router = createRouter({

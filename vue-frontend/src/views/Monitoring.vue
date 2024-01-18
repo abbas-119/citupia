@@ -18,7 +18,7 @@
       </div>
       <br><br><br><br><br><br>
       <div class="flex flex-col space-y-2">
-        <button class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded mb-3"> Next </button>
+        <button @click="goToMaps" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded mb-3"> Next </button>
       </div>
     </div>
   </div>
@@ -50,6 +50,9 @@ export default {
       if (this.selectedOption) {
         this.$router.push(this.selectedOption);
       }
+    },
+    goToMaps() {
+      this.$router.push('/stk_maps/');
     },
   },
 };
