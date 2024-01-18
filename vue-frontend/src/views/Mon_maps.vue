@@ -74,7 +74,7 @@ export default {
   methods: {
     initMap() {
       // Initialize the map
-      const map = L.map('map').setView([59.3293, 18.0686], 10); // Coordinates for Stockholm
+      const map = L.map('map').setView([59.3293, 18.0686], 9); // Coordinates for Stockholm
 
       // Add OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
