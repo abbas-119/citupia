@@ -1,7 +1,9 @@
 import json
+import os
 from datetime import datetime
 
-from django.http import JsonResponse
+from django.conf import settings
+from django.http import JsonResponse, FileResponse
 from home_page.models import UserProfile
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -34,3 +36,7 @@ def userInfo(request):
         profile = UserProfile.objects.create(user=user, first_name=first_name, last_name=last_name)
         profile.save()
         return JsonResponse({"success": True})
+
+def serve_gpkg(request):
+    gpkg_file_path = os.path.join(settings.BASE_DIR, 'static', 'gpkg', 'CityBikes_Punkt.gpkg')
+    return FileResponse(open(gpkg_file_path, 'rb'))
