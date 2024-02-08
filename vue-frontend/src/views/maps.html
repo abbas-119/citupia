@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    />
+
+    <title>Leaflet geoserver request</title>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<div id="map">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="../L.Geoserver.js"></script>
+
+<script>
+
+var map = L.map("map", {zoomControl: false}).setView([59.3293, 18.0686], 10);
+  var osmLayer = L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }
+  ).addTo(map);
+
+  //wms
+
+  // Motor traffic link
+
+  var wms = L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+    layers: `demo:NVDB_Motortrafikled`,
+    format: "image/png",
+    transparent: true,
+    attribution: "CityBikes_Punkt",
+  });
+  wms.addTo(map);
+
+
+  // Cycle Parking
+
+  var wms = L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+    layers: `demo:Cykelparkering_Punkt`,
+    format: "image/png",
+    transparent: true,
+    attribution: "CityBikes",
+  });
+  wms.addTo(map);
+
+  // Cycle Plan status
+
+  var wms = L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+    layers: `demo:Cykelplan_Linje`,
+    format: "image/png",
+    transparent: true,
+    attribution: "CityBikes",
+  });
+  wms.addTo(map);
+
+
+  // Motorway
+
+  var wms = L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+    layers: `demo:NVDB_Motorvag`,
+    format: "image/png",
+    transparent: true,
+    attribution: "CityBikes",
+  });
+  wms.addTo(map);
+
+  // wfs
+  // var wfs = L.tileLayer.wfs("http://localhost:8090/geoserver/wfs", {
+  //   layers: `tiger:poly_landmarks`,
+  //
+  //
+  // });
+  // wfs.addTo(map)
+
+  //legend
+  // var legend = L.Geoserver.legend("https://riskinfo.tj/geoserver/wms", {
+  //   layers: `tajikistan:EAR_Builtup`,
+  // });
+  // legend.addTo(map);
+</script>

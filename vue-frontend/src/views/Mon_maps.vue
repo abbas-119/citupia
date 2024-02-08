@@ -1,135 +1,144 @@
-<template>
-  <div class="flex justify-center items-center h-screen">
-    <!-- Categories and Filters Container -->
-    <div class="flex flex-col ml-5 w-1/4">
-      <!-- Categories Box -->
-      <div class="rounded-lg border p-5 mb-5">
-        <div class="mb-5">
-          <h2 class="text-lg font-semibold">Categories</h2>
-        </div>
-        <!-- List of categories -->
-        <ul>
-          <li class="mb-2">
-            <button @click="showBikeLane" class="text-blue-600 hover:underline focus:outline-none">
-              Bike lane
-            </button>
-          </li>
-          <li class="mb-2">
-            <button @click="showBikeStand" class="text-blue-600 hover:underline focus:outline-none">
-              Bike stand
-            </button>
-          </li>
-          <li class="mb-2">
-            <button @click="showRentalBikes" class="text-blue-600 hover:underline focus:outline-none">
-              Rental Bikes
-            </button>
-          </li>
-        </ul>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+    <title>Leaflet geoserver request</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Vue.js App -->
+        <div id="app">
+            <!-- Categories and Filters Container -->
+            <div class="flex justify-center items-center h-screen">
+                <!-- Categories and Filters Container -->
+                <div class="flex flex-col ml-5 w-1/4">
+                    <!-- Categories Box -->
+                    <div class="rounded-lg border p-5 mb-5">
+                        <div class="mb-5">
+                            <h2 class="text-lg font-semibold">Categories</h2>
+                        </div>
+                        <!-- List of categories -->
+                        <ul>
+                            <li class="mb-2">
+                                <button @click="showBikeLane" class="text-blue-600 hover:underline focus:outline-none">
+                                    Bike lane
+                                </button>
+                            </li>
+                            <li class="mb-2">
+                                <button @click="showBikeStand" class="text-blue-600 hover:underline focus:outline-none">
+                                    Bike stand
+                                </button>
+                            </li>
+                            <li class="mb-2">
+                                <button @click="showRentalBikes" class="text-blue-600 hover:underline focus:outline-none">
+                                    Rental Bikes
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
 
-      <!-- Filters Box -->
-      <div class="rounded-lg border p-5">
-        <div class="mb-5">
-          <h2 class="text-lg font-semibold">Filters</h2>
+                    <!-- Filters Box -->
+                    <div class="rounded-lg border p-5">
+                        <div class="mb-5">
+                            <h2 class="text-lg font-semibold">Filters</h2>
+                        </div>
+                        <ul>
+                            <li class="mb-2">
+                                <button @click="showFilter1" class="text-blue-600 hover:underline focus:outline-none">
+                                    Filter 1
+                                </button>
+                            </li>
+                            <li class="mb-2">
+                                <button @click="showFilter2" class="text-blue-600 hover:underline focus:outline-none">
+                                    Filter 2
+                                </button>
+                            </li>
+                            <li class="mb-2">
+                                <button @click="showFilter3" class="text-blue-600 hover:underline focus:outline-none">
+                                    Filter 3
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Map Container -->
+                <div class="flex-1 ml-20">
+                    <div id="map" class="h-screen w-full max-w-4xl" style="height: 600px;"></div>
+                </div>
+            </div>
         </div>
-        <ul>
-          <li class="mb-2">
-            <button @click="showFilter1" class="text-blue-600 hover:underline focus:outline-none">
-              Filter 1
-            </button>
-          </li>
-          <li class="mb-2">
-            <button @click="showFilter2" class="text-blue-600 hover:underline focus:outline-none">
-              Filter 2
-            </button>
-          </li>
-          <li class="mb-2">
-            <button @click="showFilter3" class="text-blue-600 hover:underline focus:outline-none">
-              Filter 3
-            </button>
-          </li>
-        </ul>
-      </div>
     </div>
 
-    <!-- Map Container -->
-    <div class="flex-1 ml-20">
-      <div id="map" class="h-screen w-full max-w-4xl" style="height: 600px;"></div>
-    </div>
-  </div>
-</template>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="../src/L.Geoserver.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
 
-<script>
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+    <script>
+        new Vue({
+            el: '#app',
+            methods: {
+                showBikeLane() {
+                    // Implement logic for showing Bike Lane data on the map
+                },
+                showBikeStand() {
+                    // Implement logic for showing Bike Stand data on the map
+                },
+                showRentalBikes() {
+                    // Implement logic for showing Rental Bikes data on the map
+                },
+                showFilter1() {
+                    // Implement logic for Filter 1
+                },
+                showFilter2() {
+                    // Implement logic for Filter 2
+                },
+                showFilter3() {
+                    // Implement logic for Filter 3
+                }
+            },
+            mounted() {
+                // Initialize the map
+                var map = L.map("map", { zoomControl: false }).setView([59.3293, 18.0686], 10);
+                var osmLayer = L.tileLayer(
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    {
+                        maxZoom: 19,
+                        attribution:
+                            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    }
+                ).addTo(map);
 
-export default {
-  name: 'LeafletMap',
-  data() {
-    return {
-      map: null,
-    };
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.initMap();
-    });
-  },
-  methods: {
-    initMap() {
-      // Initialize the map
-      this.map = L.map('map').setView([59.3293, 18.0686], 10);
+                var wms1 = L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+                    layers: `demo:NVDB_Motortrafikled`,
+                    format: "image/png",
+                    transparent: true,
+                    attribution: "CityBikes_Punkt",
+                });
+                wms1.addTo(map);
 
-      // Add OpenStreetMap tiles
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(this.map);
-    },
-    async addWfsLayer(wfsUrl) {
-      try {
-        const response = await fetch(wfsUrl);
-        const data = await response.json();
-        const wfsLayer = L.geoJSON(data, {
-          onEachFeature: (feature, layer) => {
-            // Optionally add popups or other interactions here
-            layer.bindPopup(feature.properties.MAIN_ATTRIBUTE_VALUE);
-          }
-        }).addTo(this.map);
-        this.map.fitBounds(wfsLayer.getBounds());
-      } catch (error) {
-        console.error('Error loading WFS layer:', error);
-      }
-    },
-    /*async addGeoJsonLayer() {
-      try {
-        // Adjust the URL to the location of your GeoJSON file
-        const response = await fetch('data/mydata.geojson');
-        const geojsonData = await response.json();
-        L.geoJSON(geojsonData).addTo(this.map);
-      } catch (error) {
-        console.error('Error loading GeoJSON data:', error);
-      }
-    },*/
-    showBikeStand() {
-      const wfsUrl = 'https://openstreetgs.stockholm.se/geoservice/api/24041e9f-a752-4a88-8563-087ab48ce54b/wfs?request=GetFeature&typeName=od_gis:CityBikes_Punkt&outputFormat=JSON';
-      this.addWfsLayer(wfsUrl);
-    },
-    showBikeLane() {
-      // Logic to show Bike Lane data on the map
-    },
-    showRentalBikes() {
-      // Logic to show Rental Bikes data on the map
-    },
-    showFilter1() {
-      // Logic for Filter 1
-    },
-    showFilter2() {
-      // Logic for Filter 2
-    },
-    showFilter3() {
-      // Logic for Filter 3
-    },
-  }
-};
-</script>
+                var wms2 = L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+                    layers: `demo:Cykelparkering_Punkt`,
+                    format: "image/png",
+                    transparent: true,
+                    attribution: "CityBikes",
+                });
+                wms2.addTo(map);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = 'home_page'
@@ -9,5 +9,6 @@ urlpatterns = [
     # path('faq/', views.faq_page, name='faqPage'),
     # path('privacy/', views.privacy_page, name='privacyPage'),
     # path('terms/', views.terms_page, name='termsPage'),
-    path('user_prof/', views.user_profiles, name='profile'),
+    path('user_prof/', views.UserProfileView.as_view()),
+    path('geojson_data/', views.GeoJSONDataView.as_view()),
 ]

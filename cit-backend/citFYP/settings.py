@@ -25,11 +25,11 @@ SECRET_KEY = 'django-insecure-3_gai90yo7)v)foxz&augy!@80!-j6+3a*0f0s3rvtyxi2fp*7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8080",
 
 ]
 
@@ -52,12 +52,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
 
-    'home_page.apps.HomePageConfig',
+    'leaflet.apps.LeafletConfig',
+    'home_page',
 
 ]
 
@@ -108,6 +110,8 @@ DATABASES = {
         "NAME": "Citupia",
         "USER": "User",
         "PASSWORD": "Citupia",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -147,7 +151,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 
 
 # Default primary key field type
