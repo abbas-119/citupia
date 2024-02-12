@@ -11,6 +11,7 @@ import SettingsView from "@/views/SettingsView";
 import Monitoring from "@/views/Monitoring.vue";
 import Mon_maps from "@/views/Mon_maps.vue";
 
+
 const routes = [
   {
         path: '/sign-up',
