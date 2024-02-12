@@ -37,12 +37,21 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <script src="../L.Geoserver.js"></script>
-    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=S8d7L47mdyAG5nHG09dUnSPJjreUVPeC"></script>
-    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-traffic.js?key=S8d7L47mdyAG5nHG09dUnSPJjreUVPeC"></script>
+    <script src="L.Geoserver.js"></script>
+    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=eg5NU7KjmX1dKGFERROvoPhsBAMooVH1"></script>
+    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-traffic.js?key=eg5NU7KjmX1dKGFERROvoPhsBAMooVH1"></script>
+
+<!--    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=S8d7L47mdyAG5nHG09dUnSPJjreUVPeC"></script>-->
+<!--    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-traffic.js?key=S8d7L47mdyAG5nHG09dUnSPJjreUVPeC"></script>-->
 
     <script>
-        var map = L.map("map", {zoomControl: false}).setView([59.3293, 18.0686], 10);
+        var map = L.map('map', {
+                layers: MQ.mapLayer(),
+                center: [59.3293, 18.0686],
+                zoom: 10
+            });
+
+            MQ.trafficLayer().addTo(map);
         var osmLayer = L.tileLayer(
             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             {
