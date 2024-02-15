@@ -9,6 +9,7 @@
           <button @click="showMyLocation" class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out">
             My Location
           </button>
+          <br><br>
           <h2 class="text-xl font-semibold mb-4">City Bikes</h2>
           <!-- City Bikes buttons in two columns with grey color -->
           <div class="grid grid-cols-2 gap-3">
@@ -53,13 +54,18 @@ export default {
   name: 'MapWithContent',
   data() {
     return {
-      map:null,
       userLocationMarker: null,
       layerVisibility: {
-        NVDB_Motortrafikled: false,
+        CityBikes_Punkt: false,
         Cykelparkering_Punkt: false,
         Cykelplan_Linje: false,
-        NVDB_Motorvag: false
+        Cykelpump_Punkt: false,
+        Cykelraknare: false,
+        Cykelstrak_Linje: false,
+        NVDB_Gagata: false,
+        NVDB_Gangfartsomrade: false,
+        Elsparkcykelplats_Yta: false,
+
       },
       wmsLayers: {}
     };
@@ -88,77 +94,24 @@ export default {
         console.error("Failed to load MapQuest API:", error);
       }
     },
-    showMyLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const { latitude, longitude } = position.coords;
-          this.updateUserLocation(latitude, longitude);
-        }, () => {
-          alert("Unable to retrieve your location");
-        });
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
-    },
-
-    updateUserLocation(lat, lng) {
-  const location = [lat, lng];
-
-  // Create a custom icon with a shadow
-  const customIcon = L.icon({
-    iconUrl: markerIconPng,
-    shadowUrl: markerShadowPng,
-    iconSize: [25, 41], // Size of the icon
-    shadowSize: [41, 41], // Size of the shadow
-    iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-    shadowAnchor: [12, 41], // Point of the shadow which will correspond to the icon anchor
-    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+    initializeMap() {
+  this.map = L.map(this.$refs.map, {
+    center: [59.3293, 18.0686],
+    zoom: 9,
   });
 
-  // Check if the marker already exists
-  if (!this.userLocationMarker) {
-    // Create a new marker with the custom icon and add it to the map
-    this.userLocationMarker = L.marker(location, { icon: customIcon });
-    this.userLocationMarker.addTo(this.map);
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }
+  ).addTo(this.map);
 
-    // Attach a click event to the user location marker
-    this.userLocationMarker.on('click', (e) => {
-      L.popup()
-        .setLatLng(e.latlng)
-        .setContent(`Coordinates: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`)
-        .openOn(this.map);
-    });
-  } else {
-    // Update the marker's position and icon if it already exists
-    this.userLocationMarker.setLatLng(location);
-    this.userLocationMarker.setIcon(customIcon);
+  if (typeof MQ !== 'undefined') {
+    MQ.trafficLayer().addTo(this.map);
+    // MQ.mapLayer().addTo(this.map);
   }
-
-  // Center the map on the new location
-  this.map.setView(location, 13); // Adjust the zoom level as needed
-},
-
-
-    initializeMap() {
-      this.map = L.map(this.$refs.map, {
-        center: [59.3293, 18.0686],
-        zoom: 9,
-      });
-
-      L.tileLayer(
-          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          {
-            maxZoom: 19,
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          }
-      ).addTo(this.map);
-
-      // Ensure MQ is defined before using it
-      if (typeof MQ !== 'undefined') {
-        // MQ.mapLayer().addTo(map);
-        // MQ.trafficLayer().addTo(this.map);
-      }
 
       // Initialize WMS layers
       this.wmsLayers = {
@@ -219,18 +172,22 @@ export default {
       };
 
       // Initially add all layers to the map
-      Object.values(this.wmsLayers).forEach(layer => {
-        layer.addTo(this.map);
-        layer.setOpacity(this.layerVisibility[layer.options.layers] ? 1 : 0);
-      });
+      if (this.map) {
+    Object.values(this.wmsLayers).forEach(layer => {
+      layer.addTo(this.map);
+      layer.setOpacity(this.layerVisibility[layer.options.layers] ? 1 : 0);
+    });
+  } else {
+    console.error("Leaflet map instance is not defined.");
+  }
 
-  //     this.map.on('click', (e) => {
-  //   const latlng = e.latlng;
-  //   L.popup()
-  //     .setLatLng(latlng)
-  //     .setContent(`Coordinates: ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`)
-  //     .openOn(this.map);
-  // });
+      //     this.map.on('click', (e) => {
+      //   const latlng = e.latlng;
+      //   L.popup()
+      //     .setLatLng(latlng)
+      //     .setContent(`Coordinates: ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`)
+      //     .openOn(this.map);
+      // });
     },
     toggleLayer(layerName) {
       const layer = this.wmsLayers[layerName];
@@ -240,7 +197,33 @@ export default {
         layer.setOpacity(1);
       }
       this.layerVisibility[layerName] = !this.layerVisibility[layerName];
-    }
+    },
+    showMyLocation() {
+      this.map.locate({ setView: true, maxZoom: 13 });
+      this.map.on('locationfound', this.onLocationFound);
+      this.map.on('locationerror', this.onLocationError);
+    },
+    onLocationFound(e) {
+  const radius = e.accuracy / 2;
+  if (!this.userLocationMarker) {
+    const customIcon = L.icon({
+      iconUrl: markerIconPng,
+      shadowUrl: markerShadowPng,
+      iconSize: [25, 41],
+      shadowSize: [41, 41],
+      iconAnchor: [12, 41],
+      shadowAnchor: [12, 41],
+      popupAnchor: [1, -34],
+    });
+    this.userLocationMarker = L.marker(e.latlng, { icon: customIcon }).addTo(this.map);
+  } else {
+    this.userLocationMarker.setLatLng(e.latlng);
+  }
+  L.circle(e.latlng, radius).addTo(this.map);
+},
+onLocationError(e) {
+  alert(e.message);
+},
   },
 };
 </script>
