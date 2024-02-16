@@ -9,6 +9,7 @@
   "dependencies": {
     "autoprefixer": "^10",
     "axios": "^1.6.2",
+    "axios-jsonp": "^1.0.4",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.10",
     "jquery": "^3.7.1",

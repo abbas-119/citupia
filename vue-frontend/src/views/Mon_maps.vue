@@ -77,6 +77,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import markerIconPng from '@/store/marker-icon.png';
 import markerShadowPng from '@/store/marker-shadow.png';
+import userIcon from '@/store/here.png';
+import axios from "axios";
 
 export default {
   name: 'MapWithContent',
@@ -101,6 +103,8 @@ export default {
   mounted() {
     this.loadMapQuestAPI().then(() => {
       this.initializeMap();
+      this.fetchGeoJsonData();
+
     });
   },
   methods: {
@@ -209,6 +213,7 @@ export default {
         console.error("Leaflet map instance is not defined.");
       }
 
+
       //     this.map.on('click', (e) => {
       //   const latlng = e.latlng;
       //   L.popup()
@@ -217,6 +222,40 @@ export default {
       //     .openOn(this.map);
       // });
     },
+
+    fetchGeoJsonData() {
+      const url = 'http://localhost:8090/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=Citupia:CityBikes_Punkt&srsname=EPSG:4326&outputFormat=application/json';
+
+      axios.get(url)
+          .then(response => {
+            this.addGeoJsonLayer(response.data);
+          })
+          .catch(error => {
+            console.error('Error fetching GeoJSON data:', error);
+          });
+    },
+    addGeoJsonLayer(geoJsonData) {
+      L.geoJSON(geoJsonData, {
+        pointToLayer: function (feature, latlng) {
+          // Customize marker icon
+          const customIcon = L.icon({
+            iconUrl: markerIconPng,
+            shadowUrl: markerShadowPng,
+            iconSize: [25, 41], // Size of the icon
+            shadowSize: [41, 41], // Size of the shadow
+            iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+            shadowAnchor: [12, 41], // The same for the shadow
+            popupAnchor: [1, -34] // Point from which the popup should open relative to the iconAnchor
+          });
+          const marker = L.marker(latlng, {icon: customIcon});
+          // Add popup with coordinates
+          const coordinates = latlng.lat.toFixed(5) + ", " + latlng.lng.toFixed(5);
+          marker.bindPopup("Coordinates: " + coordinates).openPopup();
+          return marker;
+        }
+      }).addTo(this.map);
+    },
+
     toggleLayer(layerName) {
       const layer = this.wmsLayers[layerName];
       if (this.layerVisibility[layerName]) {
@@ -226,6 +265,7 @@ export default {
       }
       this.layerVisibility[layerName] = !this.layerVisibility[layerName];
     },
+
     showMyLocation() {
       this.map.locate({setView: true, maxZoom: 13});
       this.map.on('locationfound', this.onLocationFound);
@@ -235,19 +275,46 @@ export default {
       const radius = e.accuracy / 2;
       if (!this.userLocationMarker) {
         const customIcon = L.icon({
-          iconUrl: markerIconPng,
+          iconUrl: userIcon,
           shadowUrl: markerShadowPng,
-          iconSize: [25, 41],
+          iconSize: [40, 41],
           shadowSize: [41, 41],
           iconAnchor: [12, 41],
           shadowAnchor: [12, 41],
           popupAnchor: [1, -34],
         });
         this.userLocationMarker = L.marker(e.latlng, {icon: customIcon}).addTo(this.map);
+        L.circle(e.latlng, radius).addTo(this.map);
       } else {
         this.userLocationMarker.setLatLng(e.latlng);
       }
-      L.circle(e.latlng, radius).addTo(this.map);
+
+      // Initialize variables for nearest point
+      let nearestDistance = Infinity;
+      let nearestFeature = null;
+
+      // Iterate through each feature in the GeoJSON layer
+      this.map.eachLayer(layer => {
+        if (layer instanceof L.GeoJSON) {
+          layer.eachLayer(featureLayer => {
+            const distance = e.latlng.distanceTo(featureLayer.getLatLng());
+            if (distance < nearestDistance) {
+              nearestDistance = distance;
+              nearestFeature = featureLayer;
+            }
+          });
+        }
+      });
+
+      // Display a marker at the nearest point with a popup showing the distance
+      if (nearestFeature) {
+        const nearestLatLng = nearestFeature.getLatLng();
+        const nearestMarker = L.marker(nearestLatLng, {
+          title: "Nearest Point"
+        }).addTo(this.map);
+
+        nearestMarker.bindPopup(`Nearest Point is ${nearestDistance.toFixed(2)} meters away.`).openPopup();
+      }
     },
     onLocationError(e) {
       alert(e.message);
