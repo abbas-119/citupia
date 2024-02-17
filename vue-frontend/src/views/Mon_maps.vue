@@ -22,48 +22,13 @@
                     class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
               Bicycle parking
             </button>
-            <button @click="toggleLayer('Cykelplan_Linje')"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
-              Bicycle plan Line
-            </button>
             <button @click="toggleLayer('Cykelpump_Punkt')"
                     class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
               Bicycle pump
             </button>
-            <button @click="toggleLayer('Cykelraknare')"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
-              Bicycle counter
-            </button>
-            <button @click="toggleLayer('Cykelstrak_Linje')"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
-              Bicycle Line
-            </button>
-
-          </div>
-        </div>
-
-        <div>
-          <h2 class="text-xl font-semibold mb-4">Pedestrian</h2>
-          <!-- Pedestrian buttons in two columns with grey color -->
-          <div class="grid grid-cols-2 gap-3">
-            <button @click="toggleLayer('NVDB_Gagata')"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
-              Pedestrian Street
-            </button>
-            <button @click="toggleLayer('NVDB_Gangfartsomrade')"
-                    class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
-              Pedestrian Zone
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <h2 class="text-xl font-semibold mb-4">Electric scooter</h2>
-          <!-- Electric scooter button, centered since it's a single button -->
-          <div class="flex justify-center">
             <button @click="toggleLayer('Elsparkcykelplats_Yta')"
                     class="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate">
-              Electric scooter Point
+              Electric bike parking area
             </button>
           </div>
         </div>
@@ -88,22 +53,19 @@ export default {
       layerVisibility: {
         CityBikes_Punkt: false,
         Cykelparkering_Punkt: false,
-        Cykelplan_Linje: false,
-        Cykelpump_Punkt: false,
-        Cykelraknare: false,
-        Cykelstrak_Linje: false,
-        NVDB_Gagata: false,
-        NVDB_Gangfartsomrade: false,
-        Elsparkcykelplats_Yta: false,
-
+        // Add other layers here if needed
       },
-      wmsLayers: {}
+      wmsLayers: {},
+      geoJsonLayers: {} // Maintain GeoJSON layers
     };
   },
   mounted() {
     this.loadMapQuestAPI().then(() => {
       this.initializeMap();
-      this.fetchGeoJsonData();
+      this.CityBikes_Punkt();
+      this.Cykelparkering_Punkt();
+      this.Cykelpump_Punkt();
+      this.Elsparkcykelplats_Yta();
 
     });
   },
@@ -145,64 +107,6 @@ export default {
         // MQ.mapLayer().addTo(this.map);
       }
 
-      // Initialize WMS layers
-      this.wmsLayers = {
-        CityBikes_Punkt: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: 'Citupia:CityBikes_Punkt',
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        Cykelparkering_Punkt: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:Cykelparkering_Punkt`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        Cykelplan_Linje: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:Cykelplan_Linje`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        Cykelpump_Punkt: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:Cykelpump_Punkt`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        Cykelraknare: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:Cykelraknare`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        Cykelstrak_Linje: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:Cykelstrak_Linje`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        NVDB_Gagata: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:NVDB_Gagata`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        NVDB_Gangfartsomrade: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:NVDB_Gangfartsomrade`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-        Elsparkcykelplats_Yta: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-          layers: `Citupia:Elsparkcykelplats_Yta`,
-          format: "image/png",
-          transparent: true,
-          attribution: "Your attribution here"
-        }),
-      };
-
       // Initially add all layers to the map
       if (this.map) {
         Object.values(this.wmsLayers).forEach(layer => {
@@ -212,30 +116,54 @@ export default {
       } else {
         console.error("Leaflet map instance is not defined.");
       }
-
-
-      //     this.map.on('click', (e) => {
-      //   const latlng = e.latlng;
-      //   L.popup()
-      //     .setLatLng(latlng)
-      //     .setContent(`Coordinates: ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`)
-      //     .openOn(this.map);
-      // });
     },
-
-    fetchGeoJsonData() {
-      const url = 'http://localhost:8090/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=Citupia:CityBikes_Punkt&srsname=EPSG:4326&outputFormat=application/json';
+    CityBikes_Punkt() {
+      const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:CityBikes_Punkt&srsname=EPSG:4326&outputFormat=json';
 
       axios.get(url)
           .then(response => {
-            this.addGeoJsonLayer(response.data);
+            this.addGeoJsonLayer(response.data, 'CityBikes_Punkt');
           })
           .catch(error => {
             console.error('Error fetching GeoJSON data:', error);
           });
     },
-    addGeoJsonLayer(geoJsonData) {
-      L.geoJSON(geoJsonData, {
+    Cykelparkering_Punkt() {
+      // Example URL for fetching additional GeoJSON data
+      const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Cykelparkering_Punkt&srsname=EPSG:4326&outputFormat=json';
+
+      axios.get(url)
+          .then(response => {
+            this.addGeoJsonLayer(response.data, 'Cykelparkering_Punkt');
+          })
+          .catch(error => {
+            console.error('Error fetching additional GeoJSON data:', error);
+          });
+    },
+    Cykelpump_Punkt() {
+    const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Cykelpump_Punkt&srsname=EPSG:4326&outputFormat=json';
+
+    axios.get(url)
+        .then(response => {
+          this.addGeoJsonLayer(response.data, 'Cykelpump_Punkt');
+        })
+        .catch(error => {
+          console.error('Error fetching Cykelpump_Punkt GeoJSON data:', error);
+        });
+  },
+  Elsparkcykelplats_Yta() {
+    const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Elsparkcykelplats_Yta&srsname=EPSG:4326&outputFormat=json';
+
+    axios.get(url)
+        .then(response => {
+          this.addGeoJsonLayer(response.data, 'Elsparkcykelplats_Yta');
+        })
+        .catch(error => {
+          console.error('Error fetching Elsparkcykelplats_Yta GeoJSON data:', error);
+        });
+  },
+    addGeoJsonLayer(geoJsonData, layerName) {
+      const geoJsonLayer = L.geoJSON(geoJsonData, {
         pointToLayer: function (feature, latlng) {
           // Customize marker icon
           const customIcon = L.icon({
@@ -253,69 +181,98 @@ export default {
           marker.bindPopup("Coordinates: " + coordinates).openPopup();
           return marker;
         }
-      }).addTo(this.map);
-    },
+      });
 
-    toggleLayer(layerName) {
-      const layer = this.wmsLayers[layerName];
+      this.geoJsonLayers[layerName] = geoJsonLayer;
+
       if (this.layerVisibility[layerName]) {
-        layer.setOpacity(0);
-      } else {
-        layer.setOpacity(1);
+        geoJsonLayer.addTo(this.map);
       }
-      this.layerVisibility[layerName] = !this.layerVisibility[layerName];
     },
+    toggleLayer(layerName) {
+      this.layerVisibility[layerName] = !this.layerVisibility[layerName];
 
+      if (this.geoJsonLayers[layerName]) {
+        if (this.layerVisibility[layerName]) {
+          this.geoJsonLayers[layerName].addTo(this.map);
+        } else {
+          this.map.removeLayer(this.geoJsonLayers[layerName]);
+        }
+      }
+    },
     showMyLocation() {
       this.map.locate({setView: true, maxZoom: 13});
       this.map.on('locationfound', this.onLocationFound);
       this.map.on('locationerror', this.onLocationError);
     },
-    onLocationFound(e) {
-      const radius = e.accuracy / 2;
-      if (!this.userLocationMarker) {
-        const customIcon = L.icon({
-          iconUrl: userIcon,
-          shadowUrl: markerShadowPng,
-          iconSize: [40, 41],
-          shadowSize: [41, 41],
-          iconAnchor: [12, 41],
-          shadowAnchor: [12, 41],
-          popupAnchor: [1, -34],
-        });
-        this.userLocationMarker = L.marker(e.latlng, {icon: customIcon}).addTo(this.map);
-        L.circle(e.latlng, radius).addTo(this.map);
-      } else {
-        this.userLocationMarker.setLatLng(e.latlng);
-      }
+onLocationFound(e) {
+  const radius = e.accuracy / 2;
 
-      // Initialize variables for nearest point
+  // Clear previous markers and popups
+  this.map.eachLayer(layer => {
+    if (layer instanceof L.Marker && layer !== this.userLocationMarker) {
+      this.map.removeLayer(layer);
+    }
+  });
+
+  // Update user location marker or create new if not exists
+  if (!this.userLocationMarker) {
+    const customIcon = L.icon({
+      iconUrl: userIcon,
+      shadowUrl: markerShadowPng,
+      iconSize: [40, 41],
+      shadowSize: [41, 41],
+      iconAnchor: [12, 41],
+      shadowAnchor: [12, 41],
+      popupAnchor: [1, -34],
+    });
+    this.userLocationMarker = L.marker(e.latlng, {icon: customIcon}).addTo(this.map);
+    L.circle(e.latlng, radius).addTo(this.map);
+  } else {
+    this.userLocationMarker.setLatLng(e.latlng);
+  }
+
+  // Initialize variables for nearest points
+  let nearestPoints = [];
+
+  // Iterate through each visible layer
+  for (const layerName of Object.keys(this.layerVisibility)) {
+    if (this.layerVisibility[layerName] && this.geoJsonLayers[layerName]) {
+      const geoJsonLayer = this.geoJsonLayers[layerName];
       let nearestDistance = Infinity;
       let nearestFeature = null;
 
       // Iterate through each feature in the GeoJSON layer
-      this.map.eachLayer(layer => {
-        if (layer instanceof L.GeoJSON) {
-          layer.eachLayer(featureLayer => {
-            const distance = e.latlng.distanceTo(featureLayer.getLatLng());
-            if (distance < nearestDistance) {
-              nearestDistance = distance;
-              nearestFeature = featureLayer;
-            }
-          });
+      geoJsonLayer.eachLayer(featureLayer => {
+        const distance = e.latlng.distanceTo(featureLayer.getLatLng());
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestFeature = featureLayer;
         }
       });
 
-      // Display a marker at the nearest point with a popup showing the distance
-      if (nearestFeature) {
-        const nearestLatLng = nearestFeature.getLatLng();
-        const nearestMarker = L.marker(nearestLatLng, {
-          title: "Nearest Point"
-        }).addTo(this.map);
+      // Store the nearest point for this layer
+      nearestPoints.push({
+        layerName: layerName,
+        nearestDistance: nearestDistance,
+        nearestFeature: nearestFeature
+      });
+    }
+  }
 
-        nearestMarker.bindPopup(`Nearest Point is ${nearestDistance.toFixed(2)} meters away.`).openPopup();
-      }
-    },
+  // Display markers and popups for the nearest points
+  nearestPoints.forEach(nearestPoint => {
+    const nearestLatLng = nearestPoint.nearestFeature.getLatLng();
+    const nearestMarker = L.marker(nearestLatLng, {
+      title: "Nearest Point"
+    }).addTo(this.map);
+
+    nearestMarker.bindPopup(`Nearest Point from ${nearestPoint.layerName} is ${nearestPoint.nearestDistance.toFixed(2)} meters away.`).openPopup();
+  });
+},
+
+
+
     onLocationError(e) {
       alert(e.message);
     },
