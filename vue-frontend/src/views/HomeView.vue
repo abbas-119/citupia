@@ -1,53 +1,46 @@
 <template>
-  <div class="bg-gradient-to-r from-orange-100 to-orange-400 flex flex-col items-center justify-start min-h-screen bg-gray-100 pt-20">
-    <div>
-      <h1 class="text-xl font-semibold mb-10">Select from the following:</h1>
-      <div class="flex flex-col space-y-2">
-        <button @click="goToMonitoring" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded mb-3">Monitoring</button>
-        <button @click="goToPlanning" class="bg-orange-200 hover:bg-orange-300 text-black font-bold py-2 px-4 rounded">Planning</button>
+  <div class="min-h-screen flex flex-col justify-center items-center relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-purple-900 to-indigo-900"></div>
+    <div class="absolute inset-0 bg-black opacity-75"></div>
+    <div class="absolute inset-0 z-10 flex flex-col justify-center items-center">
+      <h1 class="text-4xl font-extrabold text-white mb-8">Welcome to Your Dashboard</h1>
+      <div class="grid grid-cols-2 gap-4">
+        <button @click="goToMonitoring" class="button bg-orange-500 hover:bg-orange-600">Monitoring</button>
+        <button @click="goToPlanning" class="button bg-orange-500 hover:bg-orange-600">Planning</button>
       </div>
     </div>
-
+    <div class="absolute inset-0 z-0 flex justify-center items-center">
+      <img src="@/store/vecteezy_mapa-poligonal-de-suiza_22791598.png" alt="Background Image" class="object-cover w-7/8 h-5/6" />
+    </div>
   </div>
 </template>
 
 <script>
-import axiosClient from "@/views/axiosClient";
-import {formatDay, formatPubDate, formatMonthYear} from "./dateUtils";
-
 export default {
   name: "HomeView",
-  data() {
-    return {};
-  },
   methods: {
-
-
-
-
     goToMonitoring() {
       this.$router.push('/monitoring/');
     },
     goToPlanning() {
       this.$router.push('/planning/');
     },
-
-    user() {
-      axiosClient.get("/v1/users/me").then((response) => {
-        this.user = response.data;
-      });
-    },
-  },
-  updated() {
-    if (localStorage.getItem("largeFont") === "true") {
-      // remove all different text size class
-      document.querySelectorAll('.text-xs').forEach(e => e.classList.remove('text-xs'));
-      document.querySelectorAll('.text-sm').forEach(e => e.classList.remove('text-sm'));
-      document.querySelectorAll('.text-base').forEach(e => e.classList.remove('text-base'));
-      document.querySelectorAll('.text-lg').forEach(e => e.classList.remove('text-lg'));
-      document.querySelectorAll('.text-xl').forEach(e => e.classList.remove('text-xl'));
-      document.body.classList.add('text-xl')
-    }
   },
 };
 </script>
+
+<style scoped>
+.button {
+  background-color: #6B46C1;
+  color: #FFFFFF;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #805AD5;
+}
+</style>
