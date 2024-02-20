@@ -6,7 +6,7 @@ hue-rotate-[-30deg] hue-rotate-[-60deg] hue-rotate-[-90deg] hue-rotate-[-120deg]
        id="nav-vue">
     <div class="container mx-auto flex flex-wrap items-center justify-between h-full">
       <router-link to="/" class="pl-4 transition focus:ring-4 focus:outline-none focus:ring-blue-400">
-        <span class="text-2xl font-bold">Citupia</span>
+        <img src="@/store/WaaS main.png" alt="WaaS Logo" class="h-8">
       </router-link>
       <div class="w-auto" id="navbar-default">
         <ul class="flex flex-col p-4 md:space-x-8 md:mt-0 md:flex-row md:border-0 md:text-sm md:font-medium">
@@ -60,9 +60,9 @@ export default {
         } else {
           console.log("here")
           this.enable = true
-         // if (!this.$store.state.isAuthenticated) {
-         //    this.$router.push({name: 'LogIn', query: {redirect: this.$route.path}})
-         //  }
+          // if (!this.$store.state.isAuthenticated) {
+          //    this.$router.push({name: 'LogIn', query: {redirect: this.$route.path}})
+          //  }
         }
       }
     }

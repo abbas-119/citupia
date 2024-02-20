@@ -20,10 +20,10 @@ export default {
   name: "HomeView",
   methods: {
     goToMonitoring() {
-      this.$router.push('/monitoring/');
+      this.$router.push('/SelectionM/');
     },
     goToPlanning() {
-      this.$router.push('/planning/');
+      this.$router.push('/SelectionP/');
     },
   },
 };

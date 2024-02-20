@@ -6,53 +6,56 @@
 
       <div class="space-y-6">
         <div>
-          <button @click="showNearestPoints"
+          <button @click="showMyLocation"
                   class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
-            Show Nearest Points
+            My Location
           </button>
-          <br><br>
-          <div>
-            <label for="radiusInput" class="text-white">Radius (in meters):</label>
-            <br>
-            <input type="number" id="radiusInput" v-model="radius" class="rounded-lg p-2 bg-gray-200 text-black">
-          </div>
           <br><br>
           <h2 class="text-xl font-semibold mb-4 text-white">City Bikes</h2>
           <!-- City Bikes buttons in two columns with grey color -->
           <div class="grid grid-cols-2 gap-3">
             <button @click="toggleLayer('CityBikes_Punkt')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+                    :class="{ 'bg-green-500': activeButton === 'CityBikes_Punkt', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'CityBikes_Punkt' }"
+                    class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               City Bikes Point
             </button>
             <button @click="toggleLayer('Cykelparkering_Punkt')"
+                    :class="{ 'bg-green-500': activeButton === 'Cykelparkering_Punkt', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'Cykelparkering_Punkt' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle parking
             </button>
             <button @click="toggleLayer('Cykelpump_Punkt')"
+                    :class="{ 'bg-green-500': activeButton === 'Cykelpump_Punkt', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'Cykelpump_Punkt' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle pump
             </button>
             <button @click="toggleLayer('Elsparkcykelplats_Yta')"
+                    :class="{ 'bg-green-500': activeButton === 'Elsparkcykelplats_Yta', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'Elsparkcykelplats_Yta' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Electric bike
             </button>
             <button @click="toggleLayer('Cykelraknare')"
+                    :class="{ 'bg-green-500': activeButton === 'Cykelraknare', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'Cykelraknare' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle counter
             </button>
             <button @click="toggleLayer('Cykelstrak_Linje')"
+                    :class="{ 'bg-green-500': activeButton === 'Cykelstrak_Linje', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'Cykelstrak_Linje' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle Line
             </button>
             <button @click="toggleLayer('Cykelplan_Linje')"
+                    :class="{ 'bg-green-500': activeButton === 'Cykelplan_Linje', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'Cykelplan_Linje' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle plan Line
             </button>
             <button @click="toggleLayer('NVDB_Gangfartsomrade')"
+                    :class="{ 'bg-green-500': activeButton === 'NVDB_Gangfartsomrade', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'NVDB_Gangfartsomrade' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Zone
             </button>
             <button @click="toggleLayer('NVDB_Gagata')"
+                    :class="{ 'bg-green-500': activeButton === 'NVDB_Gagata', 'bg-gray-700 hover:bg-gray-800': activeButton !== 'NVDB_Gagata' }"
                     class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Street
             </button>
@@ -70,9 +73,9 @@ import markerIconPng from '@/store/marker-icon.png';
 import markerShadowPng from '@/store/marker-shadow.png';
 import userIcon from '@/store/here.png';
 import red from '@/store/map-red.png';
-import green from '@/store/map-lightgreen.png';
+import pink from '@/store/map-pink.png';
 import blue from '@/store/map-blue.png';
-import purple from '@/store/map-lightpurple.png';
+import brown from '@/store/map-brown.png';
 import axios from "axios";
 
 export default {
@@ -80,7 +83,7 @@ export default {
   data() {
     return {
       userLocationMarker: null,
-      radius: 5000,
+      activeButton: null,
       layerVisibility: {
         CityBikes_Punkt: false,
         Cykelparkering_Punkt: false,
@@ -191,7 +194,7 @@ export default {
     },
     CityBikes_Punkt() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:CityBikes_Punkt&srsname=EPSG:4326&outputFormat=json';
-      const iconUrl = green;
+      const iconUrl = pink;
 
       axios.get(url)
           .then(response => {
@@ -217,7 +220,7 @@ export default {
     },
     Cykelpump_Punkt() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Cykelpump_Punkt&srsname=EPSG:4326&outputFormat=json';
-      const iconUrl = purple;
+      const iconUrl = brown;
       axios.get(url)
           .then(response => {
             this.addGeoJsonLayer(response.data, 'Cykelpump_Punkt', iconUrl);
@@ -240,7 +243,7 @@ export default {
     },
     Elsparkcykelplats_Yta() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Elsparkcykelplats_Yta&srsname=EPSG:4326&outputFormat=json';
-      const iconUrl = purple;
+      const iconUrl = brown;
 
       axios.get(url)
           .then(response => {
@@ -254,7 +257,7 @@ export default {
       const customIcon = L.icon({
         iconUrl: iconUrl,
         shadowUrl: markerShadowPng,
-        iconSize: [20, 20], // Adjust the icon size here
+        iconSize: [30, 30], // Adjust the icon size here
         shadowSize: [25, 25], // Adjust the shadow size if needed
         iconAnchor: [7, 25], // Adjust the icon anchor if needed
         shadowAnchor: [7, 25], // Adjust the shadow anchor if needed
@@ -278,6 +281,13 @@ export default {
     },
 
     toggleLayer(layerName) {
+     if (this.activeButton === layerName) {
+        // If the clicked button is already active, remove the highlight
+        this.activeButton = null;
+      } else {
+        // Set the active button when clicked
+        this.activeButton = layerName;
+      }
       this.layerVisibility[layerName] = !this.layerVisibility[layerName];
 
       if (this.geoJsonLayers[layerName]) {
@@ -298,6 +308,13 @@ export default {
     },
 
     toggleGeoJsonLayer(layerName) {
+      if (this.activeButton === layerName) {
+        // If the clicked button is already active, remove the highlight
+        this.activeButton = null;
+      } else {
+        // Set the active button when clicked
+        this.activeButton = layerName;
+      }
       this.layerVisibility[layerName] = !this.layerVisibility[layerName];
 
       if (this.geoJsonLayers[layerName]) {
@@ -308,12 +325,15 @@ export default {
         }
       }
     },
-    showNearestPoints() {
-      // Listen for left-click events on the map
-      this.map.on('click', this.onMapLeftClick);
+    showMyLocation() {
+      this.map.locate({setView: true, maxZoom: 14});
+      this.map.on('locationfound', this.onLocationFound);
+      this.map.on('locationerror', this.onLocationError);
     },
 
-    onMapLeftClick(e) {
+    onLocationFound(e) {
+      const radius = e.accuracy / 2;
+
       // Clear previous markers and popups
       this.map.eachLayer(layer => {
         if (layer instanceof L.Marker && layer !== this.userLocationMarker) {
@@ -321,31 +341,25 @@ export default {
         }
       });
 
-      // Remove any existing circle marker
-      this.removeCircleMarker();
+      // Update user location marker or create new if not exists
+      if (!this.userLocationMarker) {
+        const customIcon = L.icon({
+          iconUrl: userIcon,
+          shadowUrl: markerShadowPng,
+          iconSize: [40, 41],
+          shadowSize: [41, 41],
+          iconAnchor: [12, 41],
+          shadowAnchor: [12, 41],
+          popupAnchor: [1, -34],
+        });
+        // this.userLocationMarker = L.marker(e.latlng, {icon: customIcon}).addTo(this.map);
+        L.circle(e.latlng, radius).addTo(this.map);
+      } else {
+        this.userLocationMarker.setLatLng(e.latlng);
+      }
 
-      // Call the method to find nearest points with clicked coordinates
-      this.findNearestPoints(e.latlng);
-
-      // Add a circle marker at the clicked location with a fixed radius
-      L.circleMarker(e.latlng, {radius: 3, color: 'blue'}).addTo(this.map);
-    },
-
-    removeCircleMarker() {
-      // Iterate through all layers on the map
-      this.map.eachLayer(layer => {
-        // Check if the layer is a circle marker
-        if (layer instanceof L.CircleMarker) {
-          // Remove the circle marker from the map
-          this.map.removeLayer(layer);
-        }
-      });
-    },
-
-
-    findNearestPoints(clickedLatLng) {
-      // Initialize an array to store all points within the specified radius
-      const pointsWithinRadius = [];
+      // Initialize variables to store nearest points
+      const nearestPoints = [];
 
       // Iterate through each visible layer
       Object.keys(this.geoJsonLayers).forEach(layerName => {
@@ -353,32 +367,38 @@ export default {
 
         // Check if the layer is visible
         if (this.layerVisibility[layerName]) {
+          let nearestDistance = Infinity;
+          let nearestFeature = null;
+
           // Iterate through each feature in the GeoJSON layer
           geoJsonLayer.eachLayer(featureLayer => {
-            const featureLatLng = featureLayer.getLatLng();
-            const distance = clickedLatLng.distanceTo(featureLatLng);
-
-            // Check if the point is within the specified radius
-            if (distance <= this.radius) {
-              pointsWithinRadius.push({
-                layerName: layerName,
-                distance: distance,
-                feature: featureLayer,
-                coordinates: featureLatLng
-              });
+            const distance = e.latlng.distanceTo(featureLayer.getLatLng());
+            if (distance < nearestDistance) {
+              nearestDistance = distance;
+              nearestFeature = featureLayer;
             }
           });
+
+          // Add nearest point to the array
+          if (nearestFeature) {
+            nearestPoints.push({
+              layerName: layerName,
+              nearestDistance: nearestDistance,
+              nearestFeature: nearestFeature
+            });
+          }
         }
       });
 
-      // Display markers and popups for points within radius
-      pointsWithinRadius.forEach(point => {
-        const marker = L.marker(point.coordinates, {
-          title: "Point within radius",
+      // Display markers and popups for nearest points
+      nearestPoints.forEach(nearestPoint => {
+        const nearestLatLng = nearestPoint.nearestFeature.getLatLng();
+        const nearestMarker = L.marker(nearestLatLng, {
+          title: "Nearest Point",
           icon: L.icon({
-            iconUrl: this.getLayerIconUrl(point.layerName),
+            iconUrl: this.getLayerIconUrl(nearestPoint.layerName),
             shadowUrl: markerShadowPng,
-            iconSize: [20, 20],
+            iconSize: [30, 30],
             shadowSize: [25, 25],
             iconAnchor: [7, 25],
             shadowAnchor: [7, 25],
@@ -386,22 +406,29 @@ export default {
           })
         }).addTo(this.map);
 
-        marker.bindPopup(`Point from ${point.layerName} is within ${this.radius} meters (${point.distance.toFixed(2)} meters away)`).openPopup();
+        nearestMarker.bindPopup(`Nearest Point from ${nearestPoint.layerName} is ${nearestPoint.nearestDistance.toFixed(2)} meters away.`).openPopup();
       });
     },
+
+
     getLayerIconUrl(layerName) {
       // Define the icon URLs for each layer
       const iconUrls = {
-        CityBikes_Punkt: green,
+        CityBikes_Punkt: pink,
         Cykelparkering_Punkt: red,
-        Cykelpump_Punkt: purple,
-        Elsparkcykelplats_Yta: purple,
+        Cykelpump_Punkt: brown,
+        Elsparkcykelplats_Yta: blue,
         Cykelraknare: blue,
         // Add more layers and their icon URLs if needed
       };
 
       // Return the icon URL for the specified layer
       return iconUrls[layerName] || null;
+    },
+
+
+    onLocationError(e) {
+      alert(e.message);
     },
   },
 };
