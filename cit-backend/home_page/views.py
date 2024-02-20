@@ -1,9 +1,13 @@
 import json
 import os
+from rest_framework import generics
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserProfileSerializer, GeoJSONDataSerializer
-from .models import UserProfile, GeoJSONData
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from .serializers import UserProfileSerializer
+from .models import UserProfile
 # from datetime import datetime
 
 from django.conf import settings
@@ -15,18 +19,25 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
+class Login(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key, 'user_id': user.id})
 
-class UserProfileView(APIView):
-    def get(self, request):
-        user_profiles = UserProfile.objects.all()
-        serializer = UserProfileSerializer(user_profiles, many=True)
-        return Response(serializer.data)
+class UserProfileView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = UserProfileSerializer
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
 
-class GeoJSONDataView(APIView):
-    def get(self, request):
-        geojson_data = GeoJSONData.objects.all()
-        serializer = GeoJSONDataSerializer(geojson_data, many=True)
-        return Response(serializer.data)
+# class GeoJSONDataView(APIView):
+#     def get(self, request):
+#         geojson_data = GeoJSONData.objects.all()
+#         serializer = GeoJSONDataSerializer(geojson_data, many=True)
+#         return Response(serializer.data)
 
 
 

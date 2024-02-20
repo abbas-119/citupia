@@ -20,14 +20,14 @@ class UserProfile(models.Model):
     def get_short_name(self):
         return self.firstName_custom
 
-class GeoJSONData(models.Model):
-    name = models.CharField(max_length=255)
-    geojson_file = models.FileField(upload_to='geojson_files/', null=True)  # Set null=True to allow existing rows to have a null value
-
-    def get_geojson_as_json(self):
-        if self.geojson_file:
-            # Read and parse the GeoJSON file into a JSON object
-            with open(self.geojson_file.path, 'r') as file:
-                geojson_data = json.load(file)
-            return geojson_data
-        return None  # Return None if geojson_file is not set
+# class GeoJSONData(models.Model):
+#     name = models.CharField(max_length=255)
+#     geojson_file = models.FileField(upload_to='geojson_files/', null=True)  # Set null=True to allow existing rows to have a null value
+#
+#     def get_geojson_as_json(self):
+#         if self.geojson_file:
+#             # Read and parse the GeoJSON file into a JSON object
+#             with open(self.geojson_file.path, 'r') as file:
+#                 geojson_data = json.load(file)
+#             return geojson_data
+#         return None  # Return None if geojson_file is not set

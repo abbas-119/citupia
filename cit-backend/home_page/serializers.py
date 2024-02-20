@@ -7,7 +7,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = models.UserProfile
         fields = '[user, firstName_custom, lastName_custom, user_type, company, city, position]'
 
-class GeoJSONDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.GeoJSONData
-        fields = '[name, geojson_file]'
+# class GeoJSONDataSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.GeoJSONData
+#         fields = '[name, geojson_file]'

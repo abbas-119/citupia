@@ -1,5 +1,5 @@
 from django.urls import path, include
-from . import views
+from .views import UserProfileView, Login
 
 app_name = 'home_page'
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     # path('faq/', views.faq_page, name='faqPage'),
     # path('privacy/', views.privacy_page, name='privacyPage'),
     # path('terms/', views.terms_page, name='termsPage'),
-    path('user_prof/', views.UserProfileView.as_view()),
-    path('geojson_data/', views.GeoJSONDataView.as_view()),
+    path('login/', Login.as_view(), name='login'),
+    path('user_pro/', UserProfileView.as_view(), name='userPro'),
+    # path('geojson_data/', views.GeoJSONDataView.as_view()),
 ]
