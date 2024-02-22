@@ -20,40 +20,59 @@
           <h2 class="text-xl font-semibold mb-4 text-white">City Bikes</h2>
           <!-- City Bikes buttons in two columns with grey color -->
           <div class="grid grid-cols-2 gap-3">
-            <button @click="toggleLayer('CityBikes_Punkt')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('CityBikes_Punkt')"
+                :class="activeButtons['CityBikes_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               City Bikes Point
             </button>
-            <button @click="toggleLayer('Cykelparkering_Punkt')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Bicycle parking
+            <button
+                @click="toggleLayer('Cykelparkering_Punkt')"
+                :class="activeButtons['Cykelparkering_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+              Bicycle Parking Point
             </button>
-            <button @click="toggleLayer('Cykelpump_Punkt')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Bicycle pump
+
+            <button
+                @click="toggleLayer('Cykelpump_Punkt')"
+                :class="activeButtons['Cykelpump_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+              Bicycle Pump Point
             </button>
-            <button @click="toggleLayer('Elsparkcykelplats_Yta')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('Elsparkcykelplats_Yta')"
+                :class="activeButtons['Elsparkcykelplats_Yta'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Electric bike
             </button>
-            <button @click="toggleLayer('Cykelraknare')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('Cykelraknare')"
+                :class="activeButtons['Cykelraknare'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle counter
             </button>
-            <button @click="toggleLayer('Cykelstrak_Linje')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('Cykelstrak_Linje')"
+                :class="activeButtons['Cykelstrak_Linje'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle Line
             </button>
-            <button @click="toggleLayer('Cykelplan_Linje')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('Cykelplan_Linje')"
+                :class="activeButtons['Cykelplan_Linje'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle plan Line
             </button>
-            <button @click="toggleLayer('NVDB_Gangfartsomrade')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('NVDB_Gangfartsomrade')"
+                :class="activeButtons['NVDB_Gangfartsomrade'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Zone
             </button>
-            <button @click="toggleLayer('NVDB_Gagata')"
-                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            <button
+                @click="toggleLayer('NVDB_Gagata')"
+                :class="activeButtons['NVDB_Gagata'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Street
             </button>
           </div>
@@ -80,6 +99,7 @@ export default {
   data() {
     return {
       userLocationMarker: null,
+      activeButtons: {},
       radius: 5000,
       layerVisibility: {
         CityBikes_Punkt: false,
@@ -278,20 +298,34 @@ export default {
     },
 
     toggleLayer(layerName) {
+      // Toggle visibility
       this.layerVisibility[layerName] = !this.layerVisibility[layerName];
 
-      if (this.geoJsonLayers[layerName]) {
-        if (this.layerVisibility[layerName]) {
-          this.geoJsonLayers[layerName].addTo(this.map);
-        } else {
-          this.map.removeLayer(this.geoJsonLayers[layerName]);
-        }
+      // Toggle active state
+      if (this.activeButtons[layerName]) {
+        // If button is already active, remove it to indicate deactivation
+        delete this.activeButtons[layerName];
+      } else {
+        // Activate button by setting its state to true
+        this.activeButtons[layerName] = true;
       }
 
-      if (this.wmsLayers[layerName]) {
-        if (this.layerVisibility[layerName]) {
+      // Ensure reactivity
+      this.activeButtons = {...this.activeButtons};
+
+      // Add or remove layer from the map based on the updated visibility
+      if (this.layerVisibility[layerName]) {
+        if (this.geoJsonLayers[layerName]) {
+          this.geoJsonLayers[layerName].addTo(this.map);
+        }
+        if (this.wmsLayers[layerName]) {
           this.wmsLayers[layerName].addTo(this.map);
-        } else {
+        }
+      } else {
+        if (this.geoJsonLayers[layerName]) {
+          this.map.removeLayer(this.geoJsonLayers[layerName]);
+        }
+        if (this.wmsLayers[layerName]) {
           this.map.removeLayer(this.wmsLayers[layerName]);
         }
       }
