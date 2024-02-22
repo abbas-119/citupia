@@ -70,9 +70,9 @@ import markerIconPng from '@/store/marker-icon.png';
 import markerShadowPng from '@/store/marker-shadow.png';
 import userIcon from '@/store/here.png';
 import red from '@/store/map-red.png';
-import green from '@/store/map-lightgreen.png';
+import pink from '@/store/map-pink.png';
 import blue from '@/store/map-blue.png';
-import purple from '@/store/map-lightpurple.png';
+import brown from '@/store/map-brown.png';
 import axios from "axios";
 
 export default {
@@ -191,7 +191,7 @@ export default {
     },
     CityBikes_Punkt() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:CityBikes_Punkt&srsname=EPSG:4326&outputFormat=json';
-      const iconUrl = green;
+      const iconUrl = pink;
 
       axios.get(url)
           .then(response => {
@@ -217,7 +217,7 @@ export default {
     },
     Cykelpump_Punkt() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Cykelpump_Punkt&srsname=EPSG:4326&outputFormat=json';
-      const iconUrl = purple;
+      const iconUrl = brown;
       axios.get(url)
           .then(response => {
             this.addGeoJsonLayer(response.data, 'Cykelpump_Punkt', iconUrl);
@@ -240,7 +240,7 @@ export default {
     },
     Elsparkcykelplats_Yta() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Elsparkcykelplats_Yta&srsname=EPSG:4326&outputFormat=json';
-      const iconUrl = purple;
+      const iconUrl = brown;
 
       axios.get(url)
           .then(response => {
@@ -254,7 +254,7 @@ export default {
       const customIcon = L.icon({
         iconUrl: iconUrl,
         shadowUrl: markerShadowPng,
-        iconSize: [20, 20], // Adjust the icon size here
+        iconSize: [30, 30], // Adjust the icon size here
         shadowSize: [25, 25], // Adjust the shadow size if needed
         iconAnchor: [7, 25], // Adjust the icon anchor if needed
         shadowAnchor: [7, 25], // Adjust the shadow anchor if needed
@@ -378,7 +378,7 @@ export default {
           icon: L.icon({
             iconUrl: this.getLayerIconUrl(point.layerName),
             shadowUrl: markerShadowPng,
-            iconSize: [20, 20],
+            iconSize: [30, 30],
             shadowSize: [25, 25],
             iconAnchor: [7, 25],
             shadowAnchor: [7, 25],
@@ -392,10 +392,10 @@ export default {
     getLayerIconUrl(layerName) {
       // Define the icon URLs for each layer
       const iconUrls = {
-        CityBikes_Punkt: green,
+        CityBikes_Punkt: pink,
         Cykelparkering_Punkt: red,
-        Cykelpump_Punkt: purple,
-        Elsparkcykelplats_Yta: purple,
+        Cykelpump_Punkt: brown,
+        Elsparkcykelplats_Yta: brown,
         Cykelraknare: blue,
         // Add more layers and their icon URLs if needed
       };
