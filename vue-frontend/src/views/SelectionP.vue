@@ -35,9 +35,8 @@ export default {
     return {
       selectedOptionC: '',
       selectedOption: '',
-      countries: ['Sweden', 'Portugal'],
+      countries: ['Sweden'],
       countryCities: {
-        Portugal: ['Braga'],
         Sweden: ['Stockholm']
       },
       availableCities: []
