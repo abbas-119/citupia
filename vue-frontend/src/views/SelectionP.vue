@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="absolute inset-0 z-0 flex justify-center items-center">
-      <img src="@/store/vecteezy_mapa-poligonal-de-suiza_22791598.png" alt="Background Image" class="object-cover w-7/8 h-5/6" />
+      <img src="@/store/vecteezy_mapa-poligonal-de-suiza_22791598.png" alt="Background Image" class="object-cover w-full h-full" />
     </div>
   </div>
 </template>

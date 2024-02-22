@@ -1,19 +1,19 @@
 <template>
-  <div class="flex h-screen w-screen">
-    <div ref="map" class="flex-grow border-r-2 border-black"></div>
-    <div class="w-1/4 bg-gray-900 p-6">
-      <h1 class="text-3xl font-bold mb-8 text-white">Layers</h1>
+  <div class="flex flex-col md:flex-row h-screen w-screen">
+    <div ref="map" class="flex-grow md:border-r-2 border-black"></div>
+    <div class="w-full md:w-1/4 bg-gray-900 p-4 md:p-6 overflow-auto">
+      <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-white">Layers</h1>
 
-      <div class="space-y-6">
+      <div class="space-y-4">
         <div>
           <button @click="showMyLocation"
                   class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
             My Location
           </button>
           <br><br>
-          <h2 class="text-xl font-semibold mb-4 text-white">City Bikes</h2>
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">City Bikes</h2>
           <!-- City Bikes buttons in two columns with grey color -->
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button
                 @click="toggleLayer('CityBikes_Punkt')"
                 :class="activeButtons['CityBikes_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
