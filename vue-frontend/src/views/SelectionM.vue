@@ -1,12 +1,8 @@
 <template>
   <div class="min-h-screen flex flex-col justify-center items-center relative">
-    <!-- Background gradient -->
     <div class="absolute inset-0 bg-gradient-to-b from-purple-900 to-indigo-900"></div>
-    <!-- Semi-transparent overlay -->
     <div class="absolute inset-0 bg-black opacity-75"></div>
-    <!-- Content container -->
     <div class="absolute inset-0 z-10 flex flex-col justify-center items-center">
-      <!-- Your content here -->
       <h1 class="text-4xl font-extrabold text-white mb-8">Select Your Location</h1>
       <div class="flex flex-col space-y-6 items-center">
         <select v-model="selectedOptionC" class="select-dropdown">
@@ -17,13 +13,15 @@
           <option value="" disabled>Please select a city</option>
           <option v-for="city in availableCities" :key="city" :value="city">{{ city }}</option>
         </select>
-        <button @click="goToMaps" class="button">
+        <button @click="goToMaps" :class="['button', { 'button-disabled': isButtonDisabled }]"
+                :disabled="isButtonDisabled" style="text-align: center;">
           Next
         </button>
       </div>
     </div>
     <div class="absolute inset-0 z-0 flex justify-center items-center">
-      <img src="@/store/vecteezy_mapa-poligonal-de-suiza_22791598.png" alt="Background Image" class="object-cover w-full h-full" />
+      <img src="@/store/vecteezy_mapa-poligonal-de-suiza_22791598.png" alt="Background Image"
+           class="object-cover w-full h-full"/>
     </div>
   </div>
 </template>
@@ -39,19 +37,28 @@ export default {
       countryCities: {
         Sweden: ['Stockholm']
       },
-      availableCities: []
+      availableCities: [],
+      isButtonDisabled: true
     };
   },
   watch: {
     selectedOptionC(newCountry) {
       this.availableCities = this.countryCities[newCountry] || [];
       this.selectedOption = ''; // Reset city selection when country changes
+      this.checkFields();
+    },
+    selectedOption() {
+      this.checkFields();
     }
   },
   methods: {
     goToMaps() {
       this.$router.push('/stk_maps/');
     },
+    checkFields() {
+      // Enable/disable button based on fields
+      this.isButtonDisabled = !this.selectedOptionC || !this.selectedOption;
+    }
   },
 };
 </script>
@@ -71,12 +78,17 @@ export default {
 
 .button {
   background-color: #6B46C1;
-  color: #FFFFFF;
+  color: #000000;
   font-weight: bold;
   padding: 12px 24px;
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.button-disabled {
+  background-color: #FFFFFF;
+  cursor: not-allowed;
 }
 
 .button:hover {
