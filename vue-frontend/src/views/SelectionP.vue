@@ -45,7 +45,7 @@ export default {
   watch: {
     selectedOptionC(newCountry) {
       this.availableCities = this.countryCities[newCountry] || [];
-      this.selectedOption = ''; // Reset city selection when country changes
+      this.selectedOption = '';
       this.checkFields();
     },
     selectedOption() {
@@ -57,7 +57,6 @@ export default {
       this.$router.push('/plan_maps/');
     },
     checkFields() {
-      // Enable/disable button based on fields
       this.isButtonDisabled = !this.selectedOptionC || !this.selectedOption;
     }
   },

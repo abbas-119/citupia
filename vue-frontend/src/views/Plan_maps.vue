@@ -12,7 +12,6 @@
           </button>
           <br><br>
           <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">City Bikes</h2>
-          <!-- City Bikes buttons in two columns with grey color -->
           <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button
                 @click="toggleLayer('CityBikes_Punkt')"
@@ -37,7 +36,7 @@
                 @click="toggleLayer('Elsparkcykelplats_Yta')"
                 :class="activeButtons['Elsparkcykelplats_Yta'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Electric bike
+              Electric bike Parking
             </button>
             <button
                 @click="toggleLayer('Cykelraknare')"
@@ -58,10 +57,20 @@
               Bicycle plan Line
             </button>
             <button
+                @click="toggleLayer('Markupplatelse_Punkt')"
+                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+              Markuplatelse Point
+            </button>
+          </div>
+          <br><br>
+            <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Pedestrian Network</h2>
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
+            <button
                 @click="toggleLayer('NVDB_Gangfartsomrade')"
                 :class="activeButtons['NVDB_Gangfartsomrade'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Pedestrian Zone
+              Pedestrian Area
             </button>
             <button
                 @click="toggleLayer('NVDB_Gagata')"
@@ -69,7 +78,13 @@
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Street
             </button>
+            <button @click="toggleLiveTrafficLayer"
+              :class="activeButtons['liveTraffic'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+              class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
+        {{ activeButtons['liveTraffic'] ? 'Hide Live Traffic' : 'Show Live Traffic' }}
+      </button>
           </div>
+
         </div>
       </div>
     </div>
@@ -117,7 +132,8 @@ export default {
       this.Cykelparkering_Punkt();
       this.Cykelpump_Punkt();
       this.Cykelraknare();
-      this.Elsparkcykelplats_Yta();
+      this.Markupplatelse_Punkt();
+      // this.Elsparkcykelplats_Yta();
 
     });
   },
@@ -136,6 +152,8 @@ export default {
         await this.loadScript("https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=eg5NU7KjmX1dKGFERROvoPhsBAMooVH1");
         await this.loadScript("https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-traffic.js?key=eg5NU7KjmX1dKGFERROvoPhsBAMooVH1");
         await this.loadScript("https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-routing.js?key=eg5NU7KjmX1dKGFERROvoPhsBAMooVH1");
+
+        this.trafficLayer = MQ.trafficLayer();
 
         console.log("MapQuest API loaded successfully.");
       } catch (error) {
@@ -156,10 +174,10 @@ export default {
           }
       ).addTo(this.map);
 
-      if (typeof MQ !== 'undefined') {
-        MQ.trafficLayer().addTo(this.map);
-        // MQ.mapLayer().addTo(this.map);
-      }
+      // if (typeof MQ !== 'undefined') {
+      //   MQ.trafficLayer().addTo(this.map);
+      //   // MQ.mapLayer().addTo(this.map);
+      // }
 
       this.wmsLayers = {
         Cykelplan_Linje: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
@@ -188,6 +206,12 @@ export default {
         }),
         NVDB_Gangfartsomrade: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
           layers: `Citupia:NVDB_Gangfartsomrade`,
+          format: "image/png",
+          transparent: true,
+          attribution: "Your attribution here"
+        }),
+        Elsparkcykelplats_Yta: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+          layers: `Citupia:Elsparkcykelplats_Yta`,
           format: "image/png",
           transparent: true,
           attribution: "Your attribution here"
@@ -252,18 +276,30 @@ export default {
             console.error('Error fetching Cykelraknare GeoJSON data:', error);
           });
     },
-    Elsparkcykelplats_Yta() {
-      const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Elsparkcykelplats_Yta&srsname=EPSG:4326&outputFormat=json';
+    Markupplatelse_Punkt() {
+      const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Markupplatelse_Punkt&srsname=EPSG:4326&outputFormat=json';
       const iconUrl = brown;
 
       axios.get(url)
           .then(response => {
-            this.addGeoJsonLayer(response.data, 'Elsparkcykelplats_Yta', iconUrl);
+            this.addGeoJsonLayer(response.data, 'Markupplatelse_Punkt', iconUrl);
           })
           .catch(error => {
-            console.error('Error fetching Elsparkcykelplats_Yta GeoJSON data:', error);
+            console.error('Error fetching Markupplatelse_Punkt GeoJSON data:', error);
           });
     },
+    // Elsparkcykelplats_Yta() {
+    //   const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Elsparkcykelplats_Yta&srsname=EPSG:4326&outputFormat=json';
+    //   const iconUrl = brown;
+    //
+    //   axios.get(url)
+    //       .then(response => {
+    //         this.addGeoJsonLayer(response.data, 'Elsparkcykelplats_Yta', iconUrl);
+    //       })
+    //       .catch(error => {
+    //         console.error('Error fetching Elsparkcykelplats_Yta GeoJSON data:', error);
+    //       });
+    // },
     addGeoJsonLayer(geoJsonData, layerName, iconUrl) {
       const customIcon = L.icon({
         iconUrl: iconUrl,
@@ -290,6 +326,19 @@ export default {
         geoJsonLayer.addTo(this.map);
       }
     },
+
+    toggleLiveTrafficLayer() {
+      if (this.activeButtons['liveTraffic']) {
+        if (this.map.hasLayer(this.trafficLayer)) {
+          this.map.removeLayer(this.trafficLayer);
+        }
+        delete this.activeButtons['liveTraffic'];
+      } else {
+        this.trafficLayer.addTo(this.map);
+        this.activeButtons['liveTraffic'] = true;
+      }
+    },
+
 
     toggleLayer(layerName) {
       // Toggle visibility
@@ -326,24 +375,24 @@ export default {
     },
 
 
-    toggleGeoJsonLayer(layerName) {
-      if (this.activeButton === layerName) {
-        // If the clicked button is already active, remove the highlight
-        this.activeButton = null;
-      } else {
-        // Set the active button when clicked
-        this.activeButton = layerName;
-      }
-      this.layerVisibility[layerName] = !this.layerVisibility[layerName];
-
-      if (this.geoJsonLayers[layerName]) {
-        if (this.layerVisibility[layerName]) {
-          this.geoJsonLayers[layerName].addTo(this.map);
-        } else {
-          this.map.removeLayer(this.geoJsonLayers[layerName]);
-        }
-      }
-    },
+    // toggleGeoJsonLayer(layerName) {
+    //   if (this.activeButton === layerName) {
+    //     // If the clicked button is already active, remove the highlight
+    //     this.activeButton = null;
+    //   } else {
+    //     // Set the active button when clicked
+    //     this.activeButton = layerName;
+    //   }
+    //   this.layerVisibility[layerName] = !this.layerVisibility[layerName];
+    //
+    //   if (this.geoJsonLayers[layerName]) {
+    //     if (this.layerVisibility[layerName]) {
+    //       this.geoJsonLayers[layerName].addTo(this.map);
+    //     } else {
+    //       this.map.removeLayer(this.geoJsonLayers[layerName]);
+    //     }
+    //   }
+    // },
     showMyLocation() {
       this.map.locate({setView: true, maxZoom: 14});
       this.map.on('locationfound', this.onLocationFound);
