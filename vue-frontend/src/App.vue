@@ -43,30 +43,13 @@ hue-rotate-[-30deg] hue-rotate-[-60deg] hue-rotate-[-90deg] hue-rotate-[-120deg]
 import axiosClient from '@/views/axiosClient';
 
 export default {
-  name: 'App',
-  watch: {
-    $route: {
-      handler: function () {
-        if (this.$route.path.startsWith('/log-in') ||
-            this.$route.path.startsWith('/sign-up') ||
-            this.$route.path.startsWith('/privacy') ||
-            this.$route.path.startsWith('/password/reset') ||
-            this.$route.path.startsWith('/activate')
-        ) {
-          if (this.$store.state.isAuthenticated && !this.$route.path.startsWith('/privacy')) {
-            this.$router.push("/")
-          }
-          this.enable = false
-        } else {
-          console.log("here")
-          this.enable = true
-          // if (!this.$store.state.isAuthenticated) {
-          //    this.$router.push({name: 'LogIn', query: {redirect: this.$route.path}})
-          //  }
-        }
-      }
-    }
+  mounted() {
+    this.$store.commit('initializeStore')
+
+
   },
+  name: 'App',
+
   beforeCreate() {
     this.$store.commit('initializeStore')
 

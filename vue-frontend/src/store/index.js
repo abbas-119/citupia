@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 export default createStore({
     state: {
         token: '',
+        user_id: '',
         isAuthenticated: false,
     },
     getters: {},
@@ -10,20 +11,25 @@ export default createStore({
         initializeStore(state) {
             if ( localStorage.getItem('token')){
                 state.token = localStorage.getItem('token')
+                state.user_id = localStorage.getItem('user_id')
                 state.isAuthenticated = true
             }
             else{
-                state.token = ''
                 state.isAuthenticated = false
             }
         },
-        setToken(state, token) {
-            state.token = token
+        setToken(state, data){
+            state.token = data.token
+            state.user_id = data.user_id
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('user_id', data.user_id)
             state.isAuthenticated = true
         },
         removeToken(state){
             state.token = ''
-            state.isAuthenticated = false
+            state.user_id = ''
+            localStorage.removeItem('token')
+            localStorage.setItem('user_id')
         },
     },
     actions: {},

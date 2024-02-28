@@ -17,8 +17,7 @@
             <input type="number" id="radiusInput" v-model="radius" class="block w-full rounded-lg p-2 bg-gray-200 text-black">
           </div>
           <br><br>
-          <h2 class="text-xl font-semibold mb-4 text-white">City Bikes</h2>
-          <!-- City Bikes buttons in two columns with grey color -->
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">City Bikes</h2>
           <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button
                 @click="toggleLayer('CityBikes_Punkt')"
@@ -63,11 +62,21 @@
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle plan Line
             </button>
+            <!--            <button-->
+            <!--                @click="toggleLayer('Markupplatelse_Punkt')"-->
+            <!--                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"-->
+            <!--                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">-->
+            <!--              Markupplatelse Point-->
+            <!--            </button>-->
+          </div>
+          <br>
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Pedestrian Network</h2>
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button
                 @click="toggleLayer('NVDB_Gangfartsomrade')"
                 :class="activeButtons['NVDB_Gangfartsomrade'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Pedestrian Zone
+              Pedestrian Area
             </button>
             <button
                 @click="toggleLayer('NVDB_Gagata')"
@@ -75,11 +84,36 @@
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Street
             </button>
+          </div>
+          <br>
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Motor vehicle traffic</h2>
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
+          <button
+              @click="toggleLayer('Trafikflode_Motorfordon')"
+              :class="activeButtons['Trafikflode_Motorfordon'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+              class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+            Motor Traffic
+          </button>
+        </div>
+          <br>
+        <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Traffic flow</h2>
+
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button @click="toggleLiveTrafficLayer"
-              :class="activeButtons['liveTraffic'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-              class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
-        {{ activeButtons['liveTraffic'] ? 'Hide Live Traffic' : 'Show Live Traffic' }}
-      </button>
+                    :class="activeButtons['liveTraffic'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                    class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
+              {{ activeButtons['liveTraffic'] ? 'Hide Live Traffic' : 'Show Live Traffic' }}
+            </button>
+          </div>
+          <br>
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Land Grant</h2>
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
+            <button
+                @click="toggleLayer('Markupplatelse_Punkt')"
+                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+              Land Grant
+            </button>
           </div>
         </div>
       </div>
@@ -129,6 +163,7 @@ export default {
       this.Cykelparkering_Punkt();
       this.Cykelpump_Punkt();
       this.Cykelraknare();
+      this.Markupplatelse_Punkt();
       // this.Elsparkcykelplats_Yta();
 
     });
@@ -212,6 +247,12 @@ export default {
           transparent: true,
           attribution: "Your attribution here"
         }),
+        Trafikflode_Motorfordon: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+          layers: `Citupia:Trafikflode_Motorfordon`,
+          format: "image/png",
+          transparent: true,
+          attribution: "Your attribution here"
+        }),
         // Add other WMS layers here
       };
 
@@ -269,6 +310,18 @@ export default {
           })
           .catch(error => {
             console.error('Error fetching Cykelraknare GeoJSON data:', error);
+          });
+    },
+    Markupplatelse_Punkt() {
+      const url = 'http://localhost:8090/geoserver/Citupia/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Citupia%3AMarkupplatelse_Punkt&maxFeatures=50&outputFormat=application%2Fjson';
+      const iconUrl = brown;
+
+      axios.get(url)
+          .then(response => {
+            this.addGeoJsonLayer(response.data, 'Markupplatelse_Punkt', iconUrl);
+          })
+          .catch(error => {
+            console.error('Error fetching Markupplatelse_Punkt GeoJSON data:', error);
           });
     },
     // Elsparkcykelplats_Yta() {

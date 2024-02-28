@@ -56,15 +56,15 @@
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Bicycle plan Line
             </button>
-            <button
-                @click="toggleLayer('Markupplatelse_Punkt')"
-                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Markuplatelse Point
-            </button>
+            <!--            <button-->
+            <!--                @click="toggleLayer('Markupplatelse_Punkt')"-->
+            <!--                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"-->
+            <!--                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">-->
+            <!--              Markupplatelse Point-->
+            <!--            </button>-->
           </div>
-          <br><br>
-            <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Pedestrian Network</h2>
+          <br>
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Pedestrian Network</h2>
           <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button
                 @click="toggleLayer('NVDB_Gangfartsomrade')"
@@ -78,12 +78,38 @@
                 class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
               Pedestrian Street
             </button>
-            <button @click="toggleLiveTrafficLayer"
-              :class="activeButtons['liveTraffic'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-              class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
-        {{ activeButtons['liveTraffic'] ? 'Hide Live Traffic' : 'Show Live Traffic' }}
-      </button>
           </div>
+          <br>
+<!--          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Motor vehicle traffic</h2>-->
+<!--          <div class="grid grid-cols-2 gap-2 md:gap-3">-->
+<!--          <button-->
+<!--              @click="toggleLayer('Trafikflode_Motorfordon')"-->
+<!--              :class="activeButtons['Trafikflode_Motorfordon'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"-->
+<!--              class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">-->
+<!--            Motor Traffic-->
+<!--          </button>-->
+<!--        </div>-->
+<!--          <br>-->
+        <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Traffic flow</h2>
+
+          <div class="grid grid-cols-2 gap-2 md:gap-3">
+            <button @click="toggleLiveTrafficLayer"
+                    :class="activeButtons['liveTraffic'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                    class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
+              {{ activeButtons['liveTraffic'] ? 'Hide Live Traffic' : 'Show Live Traffic' }}
+            </button>
+          </div>
+          <br>
+<!--          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Land Grant</h2>-->
+<!--          <div class="grid grid-cols-2 gap-2 md:gap-3">-->
+<!--            <button-->
+<!--                @click="toggleLayer('Markupplatelse_Punkt')"-->
+<!--                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"-->
+<!--                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">-->
+<!--              Land Grant-->
+<!--            </button>-->
+<!--          </div>-->
+
 
         </div>
       </div>
@@ -119,6 +145,7 @@ export default {
         Cykelstrak_Linje: false,
         NVDB_Gagata: false,
         NVDB_Gangfartsomrade: false,
+        Markupplatelse_Punkt: false,
         // Add other layers here if needed
       },
       wmsLayers: {},
@@ -216,6 +243,12 @@ export default {
           transparent: true,
           attribution: "Your attribution here"
         }),
+        Trafikflode_Motorfordon: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
+          layers: `Citupia:Trafikflode_Motorfordon`,
+          format: "image/png",
+          transparent: true,
+          attribution: "Your attribution here"
+        }),
         // Add other WMS layers here
       };
 
@@ -277,7 +310,7 @@ export default {
           });
     },
     Markupplatelse_Punkt() {
-      const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Markupplatelse_Punkt&srsname=EPSG:4326&outputFormat=json';
+      const url = 'http://localhost:8090/geoserver/Citupia/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Citupia%3AMarkupplatelse_Punkt&maxFeatures=50&outputFormat=application%2Fjson';
       const iconUrl = brown;
 
       axios.get(url)
