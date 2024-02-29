@@ -49,4 +49,23 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL), routes
 })
 
+// const protectedRoutes = ['home','settings', 'selectionM', 'selectionP', 'stk_maps', 'plan_maps']
+//
+// router.beforeEach((to, from, next) => {
+//     const isProtected = protectedRoutes.includes(to.name)
+//     if(isProtected && !localStorage.getItem('token')) {
+//         next({name: 'LogIn', query: {redirect: to.fullPath}})
+//     }
+//     else {
+//         if (!isProtected && localStorage.getItem('token')&& (to.name === 'LogIn' || to.name === 'SignUp')) {
+//             next({name: 'Home'})
+//         }
+//
+//     else
+//         {
+//             next()
+//         }
+//     }
+// })
+
 export default router

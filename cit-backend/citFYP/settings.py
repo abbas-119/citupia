@@ -160,19 +160,19 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'citupia@gmail.com'
-EMAIL_HOST_PASSWORD = 'bbbmtkwyqeaslokm'
-EMAIL_USE_TLS = True
-
-DOMAIN = 'localhost:8080'
-SITE_NAME = 'Citupia'
-DJOSER = {
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SET_PASSWORD_RETYPE': True,
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'activate/{uid}/{token}'
-}
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'citupia@gmail.com'
+# EMAIL_HOST_PASSWORD = 'bbbmtkwyqeaslokm'
+# EMAIL_USE_TLS = True
+#
+# DOMAIN = 'localhost:8080'
+# SITE_NAME = 'Citupia'
+# DJOSER = {
+#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+#     'SET_PASSWORD_RETYPE': True,
+#     'USER_CREATE_PASSWORD_RETYPE': True,
+#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': True,
+#     'ACTIVATION_URL': 'activate/{uid}/{token}'
+# }

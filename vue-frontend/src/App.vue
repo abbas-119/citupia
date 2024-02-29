@@ -103,33 +103,33 @@ export default {
             console.log(error)
           })
     },
-    loadModules() {
-      axiosClient.get('/module/list/')
-          .then(response => {
-            this.modules = response.data
-          })
-          .catch(error => {
-            console.log(error)
-            if (error.response.status === 401) {
-              this.clientSideLogout()
-            }
-          })
-    },
-    clientSideLogout() {
-      this.$store.commit('removeToken')
-
-      axiosClient.defaults.headers.common['Authorization'] = ""
-      localStorage.setItem("token", "")
-      this.$router.push('/log-in/')
-    }
+    // loadModules() {
+    //   axiosClient.get('/module/list/')
+    //       .then(response => {
+    //         this.modules = response.data
+    //       })
+    //       .catch(error => {
+    //         console.log(error)
+    //         if (error.response.status === 401) {
+    //           this.clientSideLogout()
+    //         }
+    //       })
+    // },
+    // clientSideLogout() {
+    //   this.$store.commit('removeToken')
+    //
+    //   axiosClient.defaults.headers.common['Authorization'] = ""
+    //   localStorage.setItem("token", "")
+    //   this.$router.push('/log-in/')
+    // }
   }
   ,
   created() {
     window.addEventListener('keydown', this.handleKeyboardShortcuts)
 
-    if (this.$store.state.isAuthenticated) {
-      this.loadModules()
-    }
+    // if (this.$store.state.isAuthenticated) {
+    //   this.loadModules()
+    // }
 
     if (localStorage.getItem("theme") === "dark") {
       document.body.classList.remove('light')

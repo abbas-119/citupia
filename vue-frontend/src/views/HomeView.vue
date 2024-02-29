@@ -16,8 +16,13 @@
 </template>
 
 <script>
+
+import loginView from "@/views/LoginView.vue";
 export default {
   name: "HomeView",
+  components: {
+    loginView,
+  },
   methods: {
     goToMonitoring() {
       this.$router.push('/SelectionM/');
