@@ -5,11 +5,13 @@ export default createStore({
         token: '',
         user_id: '',
         isAuthenticated: false,
+        email: '',
     },
     getters: {},
     mutations: {
         initializeStore(state) {
             if ( localStorage.getItem('token')){
+                state.email = localStorage.getItem('email')
                 state.token = localStorage.getItem('token')
                 state.user_id = localStorage.getItem('user_id')
                 state.isAuthenticated = true
@@ -21,6 +23,8 @@ export default createStore({
         setToken(state, data){
             state.token = data.token
             state.user_id = data.user_id
+            state.email = data.email
+            localStorage.setItem('email', data.email)
             localStorage.setItem('token', data.token)
             localStorage.setItem('user_id', data.user_id)
             state.isAuthenticated = true
@@ -28,8 +32,11 @@ export default createStore({
         removeToken(state){
             state.token = ''
             state.user_id = ''
+            state.email = ''
+            localStorage.removeItem('email')
             localStorage.removeItem('token')
-            localStorage.setItem('user_id')
+            localStorage.removeItem('user_id')
+            state.isAuthenticated = false
         },
     },
     actions: {},

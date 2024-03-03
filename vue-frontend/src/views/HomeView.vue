@@ -3,6 +3,7 @@
     <div class="absolute inset-0 bg-gradient-to-b from-purple-900 to-indigo-900"></div>
     <div class="absolute inset-0 bg-black opacity-75"></div>
     <div class="absolute inset-0 z-10 flex flex-col justify-center items-center">
+
       <h1 class="text-center text-3xl sm:text-4xl font-extrabold text-white mb-8">Welcome to Your Dashboard</h1>
       <div class="grid grid-cols-2 gap-4">
         <button @click="goToMonitoring" class="button bg-orange-500 hover:bg-orange-600 py-3 px-6 sm:py-2 sm:px-4">Monitoring</button>

@@ -10,6 +10,12 @@
           <small v-if='errors.username' class="text-danger">{{ errors.username }}</small>
         </div>
         <div class="mb-2">
+          <label for="email" class="block dark:text-blue-400 text-black font-bold mb-1">Email</label>
+          <input  type="email" name="email" v-model="email" placeholder="Email"
+                 class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">
+          <small v-if='errors.email' class="text-danger">{{ errors.email }}</small>
+        </div>
+        <div class="mb-2">
           <label for="password" class="block dark-text-blue-400 text-black font-bold mb-1">Password</label>
           <input :class="invalidPasswordBox" type="password" name="password" v-model="password" placeholder="Password"
                  class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">
@@ -85,6 +91,7 @@ export default {
   data() {
     return {
       username: '',
+      email: '',
       password: '',
       re_password: '',
       // firstname: '',
@@ -97,6 +104,7 @@ export default {
       // invalid: false,
       errors: {
         username: '',
+        email: '',
         password: '',
         re_password: '',
         wrong_credentials: ''
@@ -131,6 +139,11 @@ export default {
       } else {
         this.errors.username = ''
       }
+      if (!this.email) {
+        this.errors.email = 'Email is required'
+      } else {
+        this.errors.email = ''
+      }
       if (!this.password) {
         this.errors.password = 'Password is required'
       } else {
@@ -141,7 +154,7 @@ export default {
       } else {
         this.errors.re_password = ''
       }
-      if (this.errors.username || this.errors.password || this.errors.re_password) {
+      if (this.errors.username || this.errors.email || this.errors.password || this.errors.re_password) {
         valid = false;
       }
       return valid;
@@ -151,11 +164,13 @@ export default {
       if (this.isValidForm()) {
         const url = '/auth/users/';
         axios.post(url, {
+          email: this.email,
           username: this.username,
           password: this.password,
           re_password: this.re_password,
         }).then(response => {
           this.$router.push('/log-in/');
+          this.email= '';
           this.username= '';
           this.password= '';
           this.re_password= '';

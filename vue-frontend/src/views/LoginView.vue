@@ -4,6 +4,7 @@
       <h1 class="text-4xl font-bold text-center text-gray-900">Welcome to WaaS</h1>
       <form @submit.prevent="submitForm" class="space-y-4">
         <label class="text-red-600">{{ errors.wrong_credentials }}</label>
+
         <div class="relative">
           <input type="username" name="username" v-model="username" placeholder="Username"
                  class="w-full px-4 py-3 placeholder-gray-500 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
@@ -20,9 +21,9 @@
           Log in
         </button>
       </form>
-      <div class="text-center">
-        <a href="/password/reset" class="text-blue-500 hover:underline">Forgot password?</a>
-      </div>
+<!--      <div class="text-center">-->
+<!--        <a href="/password/reset" class="text-blue-500 hover:underline">Forgot password?</a>-->
+<!--      </div>-->
       <div class="text-center text-gray-700">
         <span>Don't have an account?</span>
         <br>
@@ -49,7 +50,7 @@
 
 <script>
 import axios from 'axios';
-import axiosClient from './axiosClient';
+
 
 export default {
   name: 'LoginView',
@@ -88,7 +89,7 @@ export default {
         const url = '/login/';
         axios.post(url, {
           username: this.username,
-          password: this.password
+          password: this.password,
         }).then(response => {
           this.$store.commit('setToken', response.data);
           this.username= '';
