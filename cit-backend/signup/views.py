@@ -1,46 +1,43 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from rest_framework import status, views
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from home_page.serializers import UserProfileSerializer
 from home_page.models import UserProfile
-import json
 
-@csrf_exempt
-def addName(request):
-    if request.method != 'POST':
-        return HttpResponseBadRequest("Only POST method is allowed")
+class SignUpView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        # Create a user
+        user_data = {
+            'username': request.data.get('username'),
+            'password': request.data.get('password'),
+            'email': request.data.get('username'),  # Optional: remove if you don't want to collect email
+        }
+        user = User.objects.create_user(**user_data)
+        user.save()
 
-    try:
-        post_data = json.loads(request.body)
-        userName = post_data['username']
-        first_name_custom = post_data['firstname_custom']
-        last_name_custom = post_data['lastname_custom']
-        user_type = post_data['user_type']
-        company = post_data['company']
-        city = post_data['city']
-        position = post_data['position']
+        # Create user profile
+        profile_data = {
+            'user': user.id,
+            'firstName': request.data.get('firstName'),
+            'lastName': request.data.get('lastName'),
+            'user_type': request.data.get('user_type'),
+            # Add other fields as necessary
+        }
+        serializer = UserProfileSerializer(data=profile_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Delete the created user if profile creation fails
+            user.delete()
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if the user already exists
-        if User.objects.filter(username=userName).exists():
-            return JsonResponse({"error": "User already exists"}, status=400)
 
-        # Create the user and user profile
-        user = User.objects.create(username=userName)
-        # user.set_password("your_password_here")  # Set the user's password (replace with actual password)
-        # user.save()
-
-        profile = UserProfile.objects.create(
-            user=user,
-            first_name=first_name_custom,  # Use the custom field names
-            last_name=last_name_custom,    # Use the custom field names
-            user_type=user_type,
-            company=company,
-            city=city,
-            position=position
-        )
-        profile.save()
-
-        return JsonResponse({"success": True})
-
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_profile(request):
+    profile = UserProfile.objects.get(user=request.user)
+    serializer = UserProfileSerializer(profile)
+    return Response(serializer.data)

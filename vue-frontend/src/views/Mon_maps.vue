@@ -1,73 +1,78 @@
 <template>
   <div class="flex flex-col md:flex-row h-screen w-screen">
-    <div ref="map" class="flex-grow md:flex-grow-0 md:w-3/4 border-r-2 border-black"></div>
+    <div ref="map" class="flex-grow md:border-r-2 border-black"></div>
     <div class="w-full md:w-1/4 bg-gray-900 p-4 md:p-6 overflow-auto">
       <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-8 text-white">Layers</h1>
 
       <div class="space-y-4">
         <div>
+
+          <div>
+            <label for="radiusInput" class="block text-white mb-2">Radius (in meters):</label>
+            <br>
+            <input type="number" id="radiusInput" v-model="radius"
+                   class="block w-full rounded-lg p-2 bg-gray-200 text-black">
+            <br>
           <button @click="showNearestPoints"
                   class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out w-full">
             Show Nearest Points
           </button>
-          <br><br>
-          <div>
-            <label for="radiusInput" class="block text-white mb-2">Radius (in meters):</label>
-            <br>
-            <input type="number" id="radiusInput" v-model="radius" class="block w-full rounded-lg p-2 bg-gray-200 text-black">
           </div>
+
           <br><br>
           <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">City Bikes</h2>
           <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button
                 @click="toggleLayer('CityBikes_Punkt')"
                 :class="activeButtons['CityBikes_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              City Bikes Point
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full flex items-center space-x-2">
+              <img src="@/store/map-pink.png" alt="City Bikes Icon" class="w-6 h-6">
+              <span>City Bikes Point</span>
             </button>
             <button
                 @click="toggleLayer('Cykelparkering_Punkt')"
                 :class="activeButtons['Cykelparkering_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full flex items-center space-x-2">
+              <img src="@/store/map-red.png" alt="City Parking" class="w-6 h-6">
               Bicycle Parking Point
             </button>
 
             <button
                 @click="toggleLayer('Cykelpump_Punkt')"
                 :class="activeButtons['Cykelpump_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full flex items-center space-x-2">
+              <img src="@/store/map-brown.png" alt="City Parking" class="w-6 h-6">
               Bicycle Pump Point
-            </button>
-            <button
-                @click="toggleLayer('Elsparkcykelplats_Yta')"
-                :class="activeButtons['Elsparkcykelplats_Yta'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Electric bike Parking
             </button>
             <button
                 @click="toggleLayer('Cykelraknare')"
                 :class="activeButtons['Cykelraknare'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full flex items-center space-x-2">
+              <img src="@/store/map-blue.png" alt="City Parking" class="w-6 h-6">
               Bicycle counter
+            </button>
+            <button
+                @click="toggleLayer('Elsparkcykelplats_Yta')"
+                :class="activeButtons['Elsparkcykelplats_Yta'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate relative">
+              <span class="absolute bottom-0 left-0 w-full h-1 bg-black"></span>
+              Electric bike Parking
             </button>
             <button
                 @click="toggleLayer('Cykelstrak_Linje')"
                 :class="activeButtons['Cykelstrak_Linje'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Bicycle Line
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full relative">
+              <span class="absolute bottom-0 left-0 w-full h-1" style="background-color: #e8718d"></span>
+              <span>Cycle Line</span>
             </button>
             <button
                 @click="toggleLayer('Cykelplan_Linje')"
                 :class="activeButtons['Cykelplan_Linje'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Bicycle plan Line
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full relative">
+              <span class="absolute bottom-0 left-0 w-full h-1" style="background-color: #00cee8;"></span>
+              <span>Bicycle Plan Line</span>
             </button>
-            <!--            <button-->
-            <!--                @click="toggleLayer('Markupplatelse_Punkt')"-->
-            <!--                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"-->
-            <!--                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">-->
-            <!--              Markupplatelse Point-->
-            <!--            </button>-->
+
           </div>
           <br>
           <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Pedestrian Network</h2>
@@ -75,28 +80,32 @@
             <button
                 @click="toggleLayer('NVDB_Gangfartsomrade')"
                 :class="activeButtons['NVDB_Gangfartsomrade'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Pedestrian Area
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full relative">
+              <span class="absolute bottom-0 left-0 w-full h-1" style="background-color: #c98e00;"></span>
+              <span>Pedestrian Area</span>
             </button>
+
             <button
                 @click="toggleLayer('NVDB_Gagata')"
                 :class="activeButtons['NVDB_Gagata'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Pedestrian Street
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full relative">
+              <span class="absolute bottom-0 left-0 w-full h-1" style="background-color: #003987;"></span>
+              <span>Pedestrian Street</span>
             </button>
           </div>
           <br>
           <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Motor vehicle traffic</h2>
           <div class="grid grid-cols-2 gap-2 md:gap-3">
-          <button
-              @click="toggleLayer('Trafikflode_Motorfordon')"
-              :class="activeButtons['Trafikflode_Motorfordon'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-              class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-            Motor Traffic
-          </button>
-        </div>
+            <button
+                @click="toggleLayer('Trafikflode_Motorfordon')"
+                :class="activeButtons['Trafikflode_Motorfordon'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
+                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full relative">
+              <span class="absolute bottom-0 left-0 w-full h-1" style="background-color: #ff1a1c;"></span>
+              <span>Motor Traffic</span>
+            </button>
+          </div>
           <br>
-        <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Traffic flow</h2>
+          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Traffic flow</h2>
 
           <div class="grid grid-cols-2 gap-2 md:gap-3">
             <button @click="toggleLiveTrafficLayer"
@@ -106,15 +115,6 @@
             </button>
           </div>
           <br>
-          <h2 class="text-xl font-semibold mb-2 md:mb-4 text-white">Land Grant</h2>
-          <div class="grid grid-cols-2 gap-2 md:gap-3">
-            <button
-                @click="toggleLayer('Markupplatelse_Punkt')"
-                :class="activeButtons['Markupplatelse_Punkt'] ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-700 hover:bg-gray-800'"
-                class="text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out truncate w-full">
-              Land Grant
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -150,10 +150,9 @@ export default {
         Cykelstrak_Linje: false,
         NVDB_Gagata: false,
         NVDB_Gangfartsomrade: false,
-        // Add other layers here if needed
       },
       wmsLayers: {},
-      geoJsonLayers: {} // Maintain GeoJSON layers
+      geoJsonLayers: {}
     };
   },
   mounted() {
@@ -205,11 +204,14 @@ export default {
           }
       ).addTo(this.map);
 
-      // if (typeof MQ !== 'undefined') {
-      //   MQ.trafficLayer().addTo(this.map);
-      //   // MQ.mapLayer().addTo(this.map);
-      // }
+      if (typeof MQ !== 'undefined') {
+        // MQ.trafficLayer().addTo(this.map);
+        // MQ.mapLayer().addTo(this.map);
+      }
 
+
+      // Change the localhost port and layers to match your GeoServer configuration for every wms layer.
+      // Citupia:_______ where citupia is my workspace and _______ is the layer name
       this.wmsLayers = {
         Cykelplan_Linje: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
           layers: `Citupia:Cykelplan_Linje`,
@@ -217,12 +219,6 @@ export default {
           transparent: true,
           attribution: "Your attribution here"
         }),
-        // Cykelraknare: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
-        //   layers: `Citupia:Cykelraknare`,
-        //   format: "image/png",
-        //   transparent: true,
-        //   attribution: "Your attribution here"
-        // }),
         Cykelstrak_Linje: L.tileLayer.wms("http://localhost:8090/geoserver/wms", {
           layers: `Citupia:Cykelstrak_Linje`,
           format: "image/png",
@@ -253,15 +249,10 @@ export default {
           transparent: true,
           attribution: "Your attribution here"
         }),
-        // Add other WMS layers here
+
       };
 
-      // Initially add all layers to the map
 
-      // Object.values(this.wmsLayers).forEach(layer => {
-      //   layer.addTo(this.map);
-      //   layer.setOpacity(1); // Set opacity to 1 for testing
-      // });
     },
     CityBikes_Punkt() {
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:CityBikes_Punkt&srsname=EPSG:4326&outputFormat=json';
@@ -277,7 +268,6 @@ export default {
     },
 
     Cykelparkering_Punkt() {
-      // Example URL for fetching additional GeoJSON data
       const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Cykelparkering_Punkt&srsname=EPSG:4326&outputFormat=json';
       const iconUrl = red;
 
@@ -324,18 +314,7 @@ export default {
             console.error('Error fetching Markupplatelse_Punkt GeoJSON data:', error);
           });
     },
-    // Elsparkcykelplats_Yta() {
-    //   const url = 'https://openstreetgs.stockholm.se/geoservice/api/ba9e5991-379f-4eb4-b6a3-e288a3730b2a/wfs/?version=1.0.0&request=GetFeature&typeName=od_gis:Elsparkcykelplats_Yta&srsname=EPSG:4326&outputFormat=json';
-    //   const iconUrl = brown;
-    //
-    //   axios.get(url)
-    //       .then(response => {
-    //         this.addGeoJsonLayer(response.data, 'Elsparkcykelplats_Yta', iconUrl);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error fetching Elsparkcykelplats_Yta GeoJSON data:', error);
-    //       });
-    // },
+
     addGeoJsonLayer(geoJsonData, layerName, iconUrl) {
       const customIcon = L.icon({
         iconUrl: iconUrl,
@@ -409,17 +388,6 @@ export default {
       }
     },
 
-    toggleGeoJsonLayer(layerName) {
-      this.layerVisibility[layerName] = !this.layerVisibility[layerName];
-
-      if (this.geoJsonLayers[layerName]) {
-        if (this.layerVisibility[layerName]) {
-          this.geoJsonLayers[layerName].addTo(this.map);
-        } else {
-          this.map.removeLayer(this.geoJsonLayers[layerName]);
-        }
-      }
-    },
     showNearestPoints() {
       // Listen for left-click events on the map
       this.map.on('click', this.onMapLeftClick);
@@ -509,7 +477,6 @@ export default {
         Cykelpump_Punkt: brown,
         Elsparkcykelplats_Yta: brown,
         Cykelraknare: blue,
-        // Add more layers and their icon URLs if needed
       };
 
       // Return the icon URL for the specified layer
@@ -518,3 +485,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media screen and (min-width: 640px) {
+  .h-half {
+    height: 50%;
+  }
+}
+</style>

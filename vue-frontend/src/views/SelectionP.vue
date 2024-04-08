@@ -3,7 +3,8 @@
     <div class="absolute inset-0 bg-gradient-to-b from-purple-900 to-indigo-900"></div>
     <div class="absolute inset-0 bg-black opacity-75"></div>
     <div class="absolute inset-0 z-10 flex flex-col justify-center items-center">
-      <h1 class="text-4xl font-extrabold text-white mb-8">Select Your Location</h1>
+      <h1 class="text-4xl font-extrabold text-white mb-8">Planning</h1>
+      <br>
       <div class="flex flex-col space-y-6 items-center">
         <select v-model="selectedOptionC" class="select-dropdown">
           <option value="" disabled>Please select a country</option>

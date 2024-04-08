@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import HomeP from "@/views/HomeP.vue";
 import AboutView from "@/views/AboutView.vue";
 import PrivacyView from "@/views/PrivacyView.vue";
 import LoginView from "@/views/LoginView.vue";
@@ -14,14 +15,17 @@ import SelectionP from "@/views/SelectionP.vue";
 import Plan_maps from "@/views/Plan_maps.vue";
 
 
+
 const routes = [{
-    path: '/sign-up', name: 'SignUp', component: SignUpView
+    path: '/sign-up', name: 'SignUp', component: SignUpView, meta: { hideLogout: true }
 }, {
     path: '/', name: 'home', component: HomeView
-}, {
+},
+    {path: '/homeP', name: 'homeP', component: HomeP},
+    {
     path: '/privacy', name: 'privacy', component: PrivacyView
 }, {
-    path: '/log-in', name: 'LogIn', component: LoginView
+    path: '/log-in', name: 'LogIn', component: LoginView, meta: { hideLogout: true }
 }, {
     path: '/password/reset', name: 'ForgotPassword', component: ForgotPasswordView
 }, {
@@ -31,11 +35,11 @@ const routes = [{
     {
         path: '/activate/:uid/:token', name: 'Activation', component: ActivationView
     }, {
-        path: '/settings/', name: 'settings', component: SettingsView
+        path: '/settings', name: 'settings', component: SettingsView
     }, {
-        path: '/selectionM/', name: 'selectionM', component: SelectionM
+        path: '/selectionM', name: 'selectionM', component: SelectionM
     }, {
-        path: '/selectionP/', name: 'selectionP', component: SelectionP
+        path: '/selectionP', name: 'selectionP', component: SelectionP
     }, {
         path: '/about', name: 'about', component: AboutView
     }, {
@@ -43,29 +47,30 @@ const routes = [{
     },
     {
         path: '/plan_maps', name: 'plan_maps', component: Plan_maps
-    }]
+    },
+    ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL), routes
 })
 
-// const protectedRoutes = ['home','settings', 'selectionM', 'selectionP', 'stk_maps', 'plan_maps']
-//
-// router.beforeEach((to, from, next) => {
-//     const isProtected = protectedRoutes.includes(to.name)
-//     if(isProtected && !localStorage.getItem('token')) {
-//         next({name: 'LogIn', query: {redirect: to.fullPath}})
-//     }
-//     else {
-//         if (!isProtected && localStorage.getItem('token')&& (to.name === 'LogIn' || to.name === 'SignUp')) {
-//             next({name: 'Home'})
-//         }
-//
-//     else
-//         {
-//             next()
-//         }
-//     }
-// })
+const protectedRoutes = ['home','settings', 'selectionM', 'selectionP', 'stk_maps', 'plan_maps']
+
+router.beforeEach((to, from, next) => {
+    const isProtected = protectedRoutes.includes(to.name)
+    if(isProtected && !localStorage.getItem('token')) {
+        next({name: 'LogIn', query: {redirect: to.fullPath}})
+    }
+    else {
+        if (!isProtected && localStorage.getItem('token')&& (to.name === 'LogIn' || to.name === 'SignUp')) {
+            next({name: 'home'})
+        }
+
+    else
+        {
+            next()
+        }
+    }
+})
 
 export default router

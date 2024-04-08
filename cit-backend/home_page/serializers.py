@@ -5,7 +5,7 @@ from rest_framework import serializers
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = '[user, firstName_custom, lastName_custom, user_type, company, city, position]'
+        fields = ['user', 'firstName', 'lastName', 'user_type']
 
 # class GeoJSONDataSerializer(serializers.ModelSerializer):
 #     class Meta:

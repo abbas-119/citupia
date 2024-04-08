@@ -172,40 +172,45 @@ export default {
     methods: {
 
 
-        logout() {
+       logout() {
+        localStorage.removeItem('authToken'); // Remove the token from localStorage
+        this.$store.commit('removeToken'); // Remove the token from the store
+        this.$router.push('/log-in/'); // Redirect to login page
+    },
+        submitForm() {
+        // Make sure to send the Authorization header with the token
+        const headers = {
+            'Authorization': `Token ${this.$store.state.authToken}`
+        };
 
-            this.$store.commit('removeToken')
-            this.$router.push('/log-in/')
-        },
-        submitForm(e) {
-            const formData = {
-                new_password: this.new_password,
-                re_new_password: this.conf_password,
-                current_password: this.old_password,
-            }
+        const formData = {
+            new_password: this.new_password,
+            re_new_password: this.conf_password,
+            current_password: this.old_password,
+        };
 
-            axiosClient.post('/auth/users/set_password/', formData)
-                .then(response => {
-                    console.log(response)
-
-                    this.success = true
-                    this.invalid = false
-                    this.successMessage = "Password successfully changed!"
-                })
-                .catch(error => {
-                    console.log(error)
-                    if (error.response.status === 400) {
-                        this.errorMessage = "Invalid password"
-                    } else {
-                        //set this.errorMessage to the first element of the only attribute of error.response.data
-                        this.errorMessage = Object.values(error.response.data)[0][0]
-                    }
-                    this.invalid = true
-                    this.success = false
-                    this.textInput = "border-2 p-2 w-full rounded text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-100 border-red-500"
-                })
-
-        },
+        axiosClient.post('/auth/users/set_password/', formData, { headers })
+            .then(response => {
+                // Handle success
+                this.success = true;
+                this.invalid = false;
+                this.successMessage = "Password successfully changed!";
+                // Clear the form
+                this.old_password = '';
+                this.new_password = '';
+                this.conf_password = '';
+            })
+            .catch(error => {
+                // Handle error
+                if (error.response.status === 400) {
+                    this.errorMessage = "Invalid password";
+                } else {
+                    this.errorMessage = Object.values(error.response.data)[0][0];
+                }
+                this.invalid = true;
+                this.success = false;
+            });
+    },
     },
     computed: {
         isFormComplete() {
@@ -216,17 +221,31 @@ export default {
         // }
     },
     mounted() {
-        document.body.classList.add('transition')
-        if (this.pageReload == 'true') {
-            this.activeTab = 'accessibility'
-            localStorage.setItem("pageReload", false)
-        }
+    // Retrieve the token in a way that matches how you store it. This is just an example.
+    const token = this.$store.state.authToken || localStorage.getItem('authToken');
 
-        axiosClient.get("/auth/user/").then((response) => {
-            this.username = response.data.username;
-        })
+    // If there's no token, redirect to login
+    if (!token) {
+        this.logout();
+        return;
     }
-}
+
+    // Set up the request headers
+    const headers = {
+        'Authorization': `Token ${token}`
+    };
+
+    // Make the request to your backend
+    axiosClient.get("/api/signup/user-profile/", { headers })
+        .then((response) => {
+            // Assuming your backend sends the fields 'firstName' and 'lastName'
+            this.username = response.data.firstName + ' ' + response.data.lastName;
+            this.user_email = response.data.user; // Or however the email is sent in your response
+        }).catch((error) => {
+            console.error('Error fetching user details', error);
+            this.logout(); // Redirect to login if there's an error
+        });
+}}
 </script>
 
 <style scoped>

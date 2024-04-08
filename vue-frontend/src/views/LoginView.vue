@@ -6,9 +6,9 @@
         <label class="text-red-600">{{ errors.wrong_credentials }}</label>
 
         <div class="relative">
-          <input type="username" name="username" v-model="username" placeholder="Username"
+          <input type="username" name="username" v-model="username" placeholder="Email"
                  class="w-full px-4 py-3 placeholder-gray-500 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-          <label class="absolute top-0 left-3 -mt-2 text-xs text-gray-500" :class="{ 'text-blue-500': username }">Username</label>
+          <label class="absolute top-0 left-3 -mt-2 text-xs text-gray-500" :class="{ 'text-blue-500': username }">Email</label>
           <small v-if='errors.username' class="text-danger">{{ errors.username }}</small>
         </div>
         <div class="relative">
@@ -85,39 +85,50 @@ export default {
 
     },
     submitForm() {
-      if (this.isValidForm()) {
-        const url = '/login/';
-        axios.post(url, {
-          username: this.username,
-          password: this.password,
-        }).then(response => {
-          this.$store.commit('setToken', response.data);
-          this.username= '';
-          this.password= '';
-          this.$router.push('/')
-          // if (response.status === 200) {
-          //   this.$store.commit('setToken', response.data.token);
-          //   this.$store.commit('setUser', response.data.user);
-          //   this.$router.push({path: this.$route.query.redirect || '/'});
-          // }
-        }).catch(error => {
-          // console.log(error.response.data.non_fields_errors);
-          if (error.response.data.non_field_errors) {
-            this.errors.wrong_credentials = error.response.data.non_field_errors.join('');
-          }
-          else {
-            this.errors.wrong_credentials = '';
-          }
-          // if (error.response.status === 400) {
-          //   this.errors.wrong_credentials = 'Invalid username or password';
-          // }
-        });
+  if (this.isValidForm()) {
+    const url = '/auth/token/login/'; // The Djoser login URL
+    axios.post(url, {
+      username: this.username,
+      password: this.password,
+    }).then(response => {
+      // Store the token
+      const token = response.data.auth_token;
+      this.$store.commit('setToken', token);
+      localStorage.setItem('authToken', token);
+      // Retrieve the user profile or user type here
+      axios.get('/api/signup/user-profile/', {
+        headers: { 'Authorization': `Token ${token}` }
+      }).then(response => {
+        // Check the user type
+        if (response.data.user_type === 'regular_user') {
+          // Redirect to the page for regular users
+          this.$router.push('/selectionP');
+        } else {
+          // Redirect to the page for other user types
+          this.$router.push('/');
+        }
+      }).catch(error => {
+        console.error('Error fetching user details', error);
+      });
+
+      // Clear form fields
+      this.username = '';
+      this.password = '';
+
+    }).catch(error => {
+      if (error.response.data.non_field_errors) {
+        this.errors.wrong_credentials = error.response.data.non_field_errors.join('');
       } else {
-        console.log('invalid form');
+        this.errors.wrong_credentials = '';
       }
-    },
+    });
+  } else {
+    console.log('Invalid form');
+  }
+},
+
     redirectToSignUp() {
-      this.$router.push({name: 'SignUp', query: {redirect: this.$route.query.redirect}})
+      this.$router.push( {name: 'SignUp', query: {redirect: this.$route.query.redirect}})
     },
     redirectToResetPassword() {
       this.$router.push({name: 'ForgotPassword', query: {redirect: this.$route.query.redirect}})

@@ -4,16 +4,36 @@
       <h1 class="text-4xl font-bold text-center text-gray-900">Sign Up</h1>
       <form @submit.prevent="submitForm" class="dark:bg-gray-900 bg-gray-100 p-8 rounded-lg shadow-md w-96">
         <div class="mb-2">
-          <label for="username" class="block dark:text-blue-400 text-black font-bold mb-1">Username</label>
-          <input  type="username" name="username" v-model="username" placeholder="Username"
+          <label for="username" class="block dark:text-blue-400 text-black font-bold mb-1">Email</label>
+          <input  type="email" name="username" v-model="username" placeholder="Email"
                  class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">
           <small v-if='errors.username' class="text-danger">{{ errors.username }}</small>
         </div>
+<!--        <div class="mb-2">-->
+<!--          <label for="email" class="block dark:text-blue-400 text-black font-bold mb-1">Email</label>-->
+<!--          <input  type="email" name="email" v-model="email" placeholder="Email"-->
+<!--                 class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">-->
+<!--          <small v-if='errors.email' class="text-danger">{{ errors.email }}</small>-->
+<!--        </div>-->
+
         <div class="mb-2">
-          <label for="email" class="block dark:text-blue-400 text-black font-bold mb-1">Email</label>
-          <input  type="email" name="email" v-model="email" placeholder="Email"
+          <label for="firstName" class="block dark:text-blue-400 text-black font-bold mb-1">First name</label>
+          <input type="text" name="firstName" v-model="firstName" placeholder="First name"
                  class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">
-          <small v-if='errors.email' class="text-danger">{{ errors.email }}</small>
+        </div>
+        <div class="mb-2">
+          <label for="lastName" class="block dark:text-blue-400 text-black font-bold mb-1">Last name</label>
+          <input type="text" name="lastName" v-model="lastName" placeholder="Last name"
+                 class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">
+        </div>
+        <div class="mb-2">
+          <label for="user_type" class="block dark:text-blue-400 text-black font-bold mb-1">Categories</label>
+          <select v-model="user_type" class="w-full px-3 py-2 border border-gray-300 rounded" required>
+            <option value="municipality">Municipality/Transportation Agency</option>
+            <option value="traffic_control">Traffic Control and Enforcement</option>
+            <option value="consulting_firm">Consulting Firm</option>
+            <option value="regular_user">Regular User</option>
+          </select>
         </div>
         <div class="mb-2">
           <label for="password" class="block dark-text-blue-400 text-black font-bold mb-1">Password</label>
@@ -26,25 +46,7 @@
           <input type="password" name="re_password" v-model="re_password" placeholder="Re-enter Password" :class="invalidPasswordBox" class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">
 <small v-if='errors.re_password' class="text-danger">{{ errors.re_password }}</small>
         </div>
-<!--        <div class="mb-2">-->
-<!--          <label for="firstname" class="block dark:text-blue-400 text-black font-bold mb-1">First name</label>-->
-<!--          <input type="text" name="firstname" v-model="firstname" placeholder="First name"-->
-<!--                 class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">-->
-<!--        </div>-->
-<!--        <div class="mb-2">-->
-<!--          <label for="lastname" class="block dark:text-blue-400 text-black font-bold mb-1">Last name</label>-->
-<!--          <input type="text" name="lastname" v-model="lastname" placeholder="Last name"-->
-<!--                 class="transition border-2 p-2 w-full rounded text-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-400">-->
-<!--        </div>-->
-<!--        <div class="mb-2">-->
-<!--          <label for="user_type" class="block dark:text-blue-400 text-black font-bold mb-1">Categories</label>-->
-<!--          <select v-model="user_type" class="w-full px-3 py-2 border border-gray-300 rounded" required>-->
-<!--            <option value="municipality">Municipality/Transportation Agency</option>-->
-<!--            <option value="traffic_control">Traffic Control and Enforcement</option>-->
-<!--            <option value="consulting_firm">Consulting Firm</option>-->
-<!--            <option value="regular_user">Regular User</option>-->
-<!--          </select>-->
-<!--        </div>-->
+
 <!--        <div v-if="user_type === 'consulting_firm'" class="mb-2">-->
 <!--          <label for="company" class="block dark:text-blue-400 text-black font-bold mb-1">Company Name</label>-->
 <!--          <input type="text" name="company" v-model="company" placeholder="Company Name"-->
@@ -69,9 +71,9 @@
                   class="transition focus:ring-4 focus:ring-pink-400 flex-none h-[40px] bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-600 disabled:bg-gray-500">
             Sign up
           </button>
-          <div class="ml-4">
-            <label v-if="invalid" class="text-red-600 ">{{ errorMessage }}</label>
-          </div>
+<!--          <div class="ml-4">-->
+<!--            <label v-if="invalid" class="text-red-600 ">{{ errorMessage }}</label>-->
+<!--          </div>-->
         </div>
         <div>
           <a>Already have an account? </a>
@@ -91,12 +93,12 @@ export default {
   data() {
     return {
       username: '',
-      email: '',
+      // email: '',
       password: '',
       re_password: '',
-      // firstname: '',
-      // lastname: '',
-      // user_type: 'municipality',
+      firstName: '',
+      lastName: '',
+      user_type: 'municipality',
       // company: '',
       // city: 'Stockholm',
       // position: '',
@@ -104,7 +106,7 @@ export default {
       // invalid: false,
       errors: {
         username: '',
-        email: '',
+        // email: '',
         password: '',
         re_password: '',
         wrong_credentials: ''
@@ -139,11 +141,6 @@ export default {
       } else {
         this.errors.username = ''
       }
-      if (!this.email) {
-        this.errors.email = 'Email is required'
-      } else {
-        this.errors.email = ''
-      }
       if (!this.password) {
         this.errors.password = 'Password is required'
       } else {
@@ -154,46 +151,32 @@ export default {
       } else {
         this.errors.re_password = ''
       }
-      if (this.errors.username || this.errors.email || this.errors.password || this.errors.re_password) {
+      if (this.errors.username || this.errors.password || this.errors.re_password) {
         valid = false;
       }
       return valid;
 
     },
     submitForm() {
-      if (this.isValidForm()) {
-        const url = '/auth/users/';
-        axios.post(url, {
-          email: this.email,
-          username: this.username,
-          password: this.password,
-          re_password: this.re_password,
-        }).then(response => {
-          this.$router.push('/log-in/');
-          this.email= '';
-          this.username= '';
-          this.password= '';
-          this.re_password= '';
-          // if (response.status === 200) {
-          //   this.$store.commit('setToken', response.data.token);
-          //   this.$store.commit('setUser', response.data.user);
-          //   this.$router.push({path: this.$route.query.redirect || '/'});
-          // }
-        }).catch(error => {
-          console.log(error.response.data);
-          if(error.response.data.username) {
-            this.errors.username = error.response.data.username.join('');
-          }
-          else {
-            this.errors.username = '';
-          }
-          // if (error.response.status === 400) {
-          //   this.errors.wrong_credentials = 'Invalid username or password';
-          // }
-        });
-      }
-
-    },
+  if (this.isValidForm()) {
+    const url = '/api/signup/';
+    axios.post(url, {
+      username: this.username,
+      password: this.password,
+      re_password: this.re_password,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      user_type: this.user_type,
+    }).then(response => {
+      // Handle success
+      console.log('Signup successful', response.data);
+      this.$router.push('/log-in/');
+    }).catch(error => {
+      // Handle error
+      console.log('Signup error', error.response.data);
+    });
+  }
+},
   },
 };
 </script>

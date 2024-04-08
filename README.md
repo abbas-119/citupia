@@ -13,6 +13,7 @@ The Pedestrian Micro-Mobility Management Platform is a web-based application des
    
 3. **Run migrations and start the Django server:**
    ```bash
+   python manage.py makemigrations
    python manage.py migrate
    python manage.py runserver
    
@@ -80,6 +81,7 @@ GeoServer plays a crucial role in managing and serving geospatial data for the p
    - Navigate `vue-frontend` directory.
    - Navigate to `src` > `views` > `Mon_maps.vue` and `Plan_maps.vue`.
    - Update the `url` in the `map` object to match your GeoServer configuration.
+   - Update the `workspace` and `layer name` to match the workspace and layer you created in GeoServer by looking at comments above `this.wmsLayers` method in both `Plan_maps.vue` and `Mon_maps.vue`.
 
 ## Note:
 1. For Planning feature, if the user is not located in stockholm, Sweden, please use a VPN to access the feature. The feature is only available for Stockholm.

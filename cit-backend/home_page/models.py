@@ -7,18 +7,18 @@ from django.contrib.auth.models import User
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    firstName_custom = models.CharField(max_length=150)
-    lastName_custom = models.CharField(max_length=150)
+    firstName = models.CharField(max_length=150)
+    lastName = models.CharField(max_length=150)
     user_type = models.CharField(max_length=100, blank=True, null=True)
-    company = models.CharField(max_length=150, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    position = models.CharField(max_length=100, blank=True, null=True)
+    # company = models.CharField(max_length=150, blank=True, null=True)
+    # city = models.CharField(max_length=100, blank=True, null=True)
+    # position = models.CharField(max_length=100, blank=True, null=True)
 
     def get_full_name(self):
-        return f'{self.firstName_custom} {self.lastName_custom}'
+        return f'{self.firstName} {self.lastName}'
 
     def get_short_name(self):
-        return self.firstName_custom
+        return self.firstName
 
 # class GeoJSONData(models.Model):
 #     name = models.CharField(max_length=255)

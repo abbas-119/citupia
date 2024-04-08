@@ -6,14 +6,14 @@ hue-rotate-[-30deg] hue-rotate-[-60deg] hue-rotate-[-90deg] hue-rotate-[-120deg]
        id="nav-vue">
     <div class="container mx-auto flex flex-wrap items-center justify-between h-full">
       <router-link to="/" class="pl-4 transition focus:ring-4 focus:outline-none focus:ring-blue-400">
-        <img src="@/store/WaaS main.png" alt="WaaS Logo" class="h-8">
+        <img src="@/store/WaaS main.png" alt="WaaS Logo" class="h-10">
       </router-link>
       <div class="w-auto" id="navbar-default">
         <ul class="flex flex-col p-4 md:space-x-8 md:mt-0 md:flex-row md:border-0 md:text-sm md:font-medium">
           <li>
-            <a href="/settings/"
-               class="transition focus:ring-4 focus:outline-none focus:ring-blue-400 block rounded py-2 pr-4 pl-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 md:border-0 md:p-0 md:hover:bg-transparent md:hover:text-blue-700"><i
-                class="fa fa-cog scale-150 pr-2" aria-hidden="true"></i>Settings</a>
+            <!-- In your App.vue template -->
+            <button v-if="!$route.meta.hideLogout" @click="logout" class="logout-button">Logout</button>
+
           </li>
         </ul>
       </div>
@@ -74,84 +74,21 @@ export default {
     }
   },
   methods: {
+    logout() {
+      localStorage.removeItem('authToken'); // Remove the token from localStorage
+      this.$store.commit('removeToken'); // Remove the token from the store
+      delete axiosClient.defaults.headers.common['Authorization']; // Remove the token from axiosClient defaults
+      this.$router.push('/log-in/'); // Redirect to login page
+    },
     handleKeyboardShortcuts(event) {
-      if (event.altKey && (event.key === 'K' || event.key === 'k')) {
-        this.$refs.search.focus()
-      }
-      if (event.altKey && (event.key === 'M' || event.key === 'm')) {
-        this.$refs.modules.focus()
-      }
+
       if (event.altKey && (event.key === 'H' || event.key === 'h')) {
         this.$router.push({path: '/'})
       }
-      if (event.altKey && (event.key === 'Q' || event.key === 'q') && this.$route.params.mod) {
-        this.$router.push({path: '/ask/' + this.$route.params.mod})
-      }
+
     },
 
-    logout() {
-      axiosClient.post('/v1/token/logout/')
-          .then(response => {
-
-            this.$store.commit('removeToken')
-
-            axiosClient.defaults.headers.common['Authorization'] = ""
-            localStorage.setItem("token", "")
-            this.$router.push('/log-in/')
-          })
-          .catch(error => {
-            console.log(error)
-          })
-    },
-    // loadModules() {
-    //   axiosClient.get('/module/list/')
-    //       .then(response => {
-    //         this.modules = response.data
-    //       })
-    //       .catch(error => {
-    //         console.log(error)
-    //         if (error.response.status === 401) {
-    //           this.clientSideLogout()
-    //         }
-    //       })
-    // },
-    // clientSideLogout() {
-    //   this.$store.commit('removeToken')
-    //
-    //   axiosClient.defaults.headers.common['Authorization'] = ""
-    //   localStorage.setItem("token", "")
-    //   this.$router.push('/log-in/')
-    // }
   }
-  ,
-  created() {
-    window.addEventListener('keydown', this.handleKeyboardShortcuts)
-
-    // if (this.$store.state.isAuthenticated) {
-    //   this.loadModules()
-    // }
-
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.remove('light')
-      document.body.classList.add('dark')
-    } else if (localStorage.getItem("theme") === "light") {
-      document.body.classList.remove('dark')
-      document.body.classList.add('light')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.remove('light')
-      document.body.classList.add('dark')
-    } else {
-      document.body.classList.remove('dark')
-      document.body.classList.add('light')
-    }
-  }
-  ,
-
-  beforeDestroy() {
-    console.log("before destroy")
-    window.removeEventListener('keydown', this.handleKeyboardShortcuts)
-  },
 }
-
 
 </script>
